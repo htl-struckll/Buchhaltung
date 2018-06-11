@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Controls;
 
-namespace BuchhaltungV1
+namespace BuchhaltungV4
 {
     /// <summary>
     /// Interaction logic for RecapOfWeek.xaml

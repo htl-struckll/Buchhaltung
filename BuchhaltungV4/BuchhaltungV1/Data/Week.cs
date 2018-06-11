@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 
-namespace BuchhaltungV1
+namespace BuchhaltungV4
 {
     public class Week : IComparable<Week>
     {

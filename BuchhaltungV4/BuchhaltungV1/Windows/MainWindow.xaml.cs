@@ -5,36 +5,49 @@ using System.Windows.Input;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Animation;
+using MySql.Data.MySqlClient;
+using Hash = BCrypt.Net.BCrypt; //Overwritting the bcypt
 
-namespace BuchhaltungV1
+namespace BuchhaltungV4
 {
     /// <summary>
     /// Interaktionslogik für MainWindow.xaml
     /// </summary>
     public partial class MainWindow
     {
+        #region var
+
+        private int _isAdmin = 1;
+        const string ConnectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=Buchhaltung;SslMode=none";
+        private static readonly MySqlConnection Connection = new MySqlConnection(ConnectionString);
+        #endregion
+
         public MainWindow()
         {
             InitializeComponent();
+
             LookForWeeks();
             AnimateAndCheck();
             Topmost = true;
         }
 
+        #region Event´s
         /// <summary>
-        /// Fills the comboBox
+        /// Login Key down event
         /// </summary>
-        private void LookForWeeks()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Password_KeyDown(object sender, KeyEventArgs e)
         {
-            for (int i = 0; i < 53; i++)
-            {
-                if (File.Exists(@"Data\" + i + @".week"))
-                {
-                    if (!ComboOfWeeks.Items.Contains(i))
-                        ComboOfWeeks.Items.Add(i + ". Woche");
-                }
-            }
+            if (e.Key == Key.Enter) Login();
         }
+
+        /// <summary>
+        /// Login click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Login_Click(object sender, RoutedEventArgs e) => Login();
 
         /// <summary>
         /// Calls the function to start the prorgramm
@@ -47,41 +60,6 @@ namespace BuchhaltungV1
             StartProgramm();
         }
 
-        /// <summary>
-        /// Starts the programm with the data needed
-        /// </summary>
-        private void StartProgramm()
-        {
-            try
-            {
-                if (Convert.ToInt32(WeekNrTextBox.Text) > 0 && Convert.ToInt32(WeekNrTextBox.Text) < 56) //Week in year
-                {
-                    if (File.Exists(@"Data\" + WeekNrTextBox.Text + @".week")) //Week does exist
-                    {
-                        Buchhaltung b = new Buchhaltung(WeekNrTextBox.Text);
-                        b.Show();
-                    }
-                    else
-                    {
-                        string oldCashDeskStr = OldCashDesk.Text;
-                        if (oldCashDeskStr.Contains("€"))
-                            oldCashDeskStr = oldCashDeskStr.Replace('€', ' ');
-                        Buchhaltung b = new Buchhaltung(WeekNrTextBox.Text, NameInput.Text,
-                            Convert.ToDateTime(DateTextBox.Text), Convert.ToDouble(oldCashDeskStr));
-                        b.Show();
-                    }
-
-                    Close();
-                }
-                else
-                    Buchhaltung.Log("Ungültige Woche");
-            }
-            catch (Exception e)
-            {
-                Buchhaltung.Log(e.Message);
-                Buchhaltung.SaveErrorMsg(e);
-            }
-        }
 
         /// <summary>
         /// Starts Programm on Enter
@@ -93,6 +71,7 @@ namespace BuchhaltungV1
             if (e.Key == Key.Enter)
                 StartProgramm();
         }
+
 
         /// <summary>
         /// Updates week nr in textBox from selected DropDown
@@ -139,30 +118,6 @@ namespace BuchhaltungV1
         private void CheckWeek_txtChanged(object sender, TextChangedEventArgs e) => AnimateAndCheck();
 
         /// <summary>
-        /// Looks if File Exists When not it expands additional info
-        /// </summary>
-        private void AnimateAndCheck()
-        {
-            if (File.Exists(@"Data\" + WeekNrTextBox.Text + @".week") && WeekNrTextBox.Text != "" ||
-                WeekNrTextBox.Text == "")
-            {
-                Expander ex = NewWeekExpander;
-                DoubleAnimation animation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.5));
-
-                ex.BeginAnimation(OpacityProperty, animation);
-            }
-            else
-            {
-                Expander ex = NewWeekExpander;
-                DoubleAnimation animation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.5));
-
-                NewWeekExpander.IsExpanded = true;
-
-                ex.BeginAnimation(OpacityProperty, animation);
-            }
-        }
-
-        /// <summary>
         /// Expands week
         /// </summary>
         /// <param name="sender"></param>
@@ -184,5 +139,228 @@ namespace BuchhaltungV1
         /// <param name="e"></param>
         private void PreviewWeekNr(object sender, TextCompositionEventArgs e) =>
             e.Handled = new Regex("[^0-9]+").IsMatch(e.Text);
+
+        #endregion
+
+        #region Check´s
+
+        /// <summary>
+        /// Checks if given login information is correct and returns value
+        /// </summary>
+        /// <param name="name">Username input</param>
+        /// <param name="pwd">Password input</param>
+        /// <returns>true if given login infomation is correct</returns>
+        private bool CheckLoginInfo(string name, char[] pwd)
+        {
+            try
+            {
+                string query = "SELECT password FROM user WHERE @name LIKE username";
+                MySqlCommand cmd = new MySqlCommand(query, Connection) {CommandTimeout = 60};
+
+                Connect();
+
+                cmd.Parameters.AddWithValue("@name", name);
+                cmd.Prepare();
+
+                string retVal = cmd.ExecuteScalar() == null ? "." : cmd.ExecuteScalar().ToString();
+
+                CloseConnection();
+
+                return !retVal.Equals(".") && Hash.CheckPassword(GetStringFromChar(pwd), retVal);
+            }
+            catch (Exception ex)
+            {
+                Buchhaltung.Log(ex.Message);
+                Buchhaltung.SaveErrorMsg(ex);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if user wrote something into the fields
+        /// </summary>
+        /// <returns>true if input is ok</returns>
+        private bool CheckInput() => UsernameInput.Text.Length > 0 && PasswordInput.Password.Length > 0;
+
+        /// <summary>
+        /// Looks if File Exists When not it expands additional info
+        /// </summary>
+        private void AnimateAndCheck()
+        {
+            if (_isAdmin.Equals(0)) return; //returns if user is not an admin
+
+            Expander ex = NewWeekExpander;
+            if (WeekNrTextBox.Text != "" && File.Exists(@"Data\" + WeekNrTextBox.Text + @".week") ||
+                WeekNrTextBox.Text == "")
+            {
+                DoubleAnimation animation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.5));
+
+                ex.BeginAnimation(OpacityProperty, animation);
+            }
+            else
+            {
+                DoubleAnimation animation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.5));
+
+                NewWeekExpander.IsExpanded = true;
+
+                ex.BeginAnimation(OpacityProperty, animation);
+            }
+        }
+        #endregion
+
+        #region Database
+
+        /// <summary>
+        /// Opens the sql connection
+        /// </summary>
+        private void Connect() => Connection.Open();
+
+        /// <summary>
+        /// Closes the sql connection
+        /// </summary>
+        private void CloseConnection() => Connection.Close();
+
+        #endregion
+
+        #region Misc
+        /// <summary>
+        /// Gets if the user is an admin
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>1 if admin/0 if user/2 if error</returns>
+        private int GetIsAdmin(string name)
+        {
+            try
+            {
+                string query = "SELECT isAdmin FROM user WHERE @name LIKE username";
+                MySqlCommand cmd = new MySqlCommand(query, Connection) { CommandTimeout = 60 };
+
+                Connect();
+
+                cmd.Parameters.AddWithValue("@name", name);
+                cmd.Prepare();
+
+                string retVal = cmd.ExecuteScalar().ToString();
+
+                CloseConnection();
+
+                return Convert.ToInt32(retVal);
+            }
+            catch (Exception ex)
+            {
+                Buchhaltung.SaveErrorMsg(ex);
+                Buchhaltung.Log(ex.Message);
+            }
+
+            return 2;
+        }
+
+        /// <summary>
+        /// Gets the string from a char array
+        /// </summary>
+        /// <param name="array"></param>
+        /// <returns></returns>
+        private string GetStringFromChar(char[] array)
+        {
+            string retVal = "";
+            foreach (char c in array)
+            {
+                retVal += c;
+            }
+
+            return retVal;
+        }
+
+        /// <summary>
+        /// Sets the window to a logged in stage
+        /// </summary>
+        public void SetLoggedIn()
+        {
+            LoginGrid.Opacity = 0;
+            MainGrid.Opacity = 100;
+        }
+        /// <summary>
+        /// Fills the comboBox
+        /// </summary>
+        private void LookForWeeks()
+        {
+            for (int i = 0; i < 53; i++)
+            {
+                if (File.Exists(@"Data\" + i + @".week"))
+                {
+                    if (!ComboOfWeeks.Items.Contains(i))
+                        ComboOfWeeks.Items.Add(i + ". Woche");
+                }
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// Starts the programm with the data needed
+        /// </summary>
+        private void StartProgramm()
+        {
+            try
+            {
+                if (Convert.ToInt32(WeekNrTextBox.Text) > 0 && Convert.ToInt32(WeekNrTextBox.Text) < 56) //Week in year
+                {
+                    if (File.Exists(@"Data\" + WeekNrTextBox.Text + @".week")) //Week does exist
+                    {
+                        Buchhaltung b = new Buchhaltung(WeekNrTextBox.Text);
+                        b.Show();
+                    }
+                    else
+                    {
+                        if (OldCashDesk.Text.Length == 0) //If one if is not correct writes error and returns
+                        {
+                            Buchhaltung.Log("Kein alter Kassenstand eingetragen!");
+                            return;
+                        }else if (NameInput.Text.Length == 0)
+                        {
+                            Buchhaltung.Log("Kein Name eingetragen!");
+                            return;
+                        } //end of return if
+
+                        string oldCashDeskStr = OldCashDesk.Text;
+                        if (oldCashDeskStr.Contains("€"))
+                            oldCashDeskStr = oldCashDeskStr.Replace('€', ' ').Trim();
+                        Buchhaltung b = new Buchhaltung(WeekNrTextBox.Text, NameInput.Text,
+                            Convert.ToDateTime(DateTextBox.Text), Convert.ToDouble(oldCashDeskStr));
+                        b.Show();
+                    }
+
+                    Close();
+                }
+                else
+                    Buchhaltung.Log("Ungültige Woche");
+            }
+            catch (Exception e)
+            {
+                Buchhaltung.Log(e.Message);
+                Buchhaltung.SaveErrorMsg(e);
+            }
+        }
+
+        /// <summary>
+        /// Logs you in with the correct login information
+        /// </summary>
+        private void Login()
+        {
+            if (CheckInput())
+            {
+                if (CheckLoginInfo(UsernameInput.Text, PasswordInput.Password.ToCharArray())) { 
+                    SetLoggedIn();
+                    _isAdmin = GetIsAdmin(UsernameInput.Text);
+
+                    if(_isAdmin.Equals(2))
+                        Buchhaltung.Log("Es ist ein error bei der Admin authentifizierung aufgetreten! Sie sind jetzt ein User.");
+                }
+                else
+                    Buchhaltung.Log("Es konnte keine Benutzername/Passwort kombination gefunden werden");
+            }
+            else
+                Buchhaltung.Log("Keine vollständige Eingabe");
+        }
     }
 }

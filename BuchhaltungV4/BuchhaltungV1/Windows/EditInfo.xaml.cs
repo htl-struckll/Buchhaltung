@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 
-namespace BuchhaltungV1
+namespace BuchhaltungV4
 {
     /// <summary>
     /// Interaction logic for EditInfo.xaml

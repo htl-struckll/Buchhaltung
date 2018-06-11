@@ -8,7 +8,7 @@ using System.Windows.Input;
 /*
  *
  */
-namespace BuchhaltungV1
+namespace BuchhaltungV4
 {
     /// <summary>
     /// Interaktionslogik für NewProduct.xaml

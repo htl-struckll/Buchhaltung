@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buchhaltung V4", "BuchhaltungV1\Buchhaltung V4.csproj", "{0CBCBE23-6FC4-42B5-B5CD-853A997F230A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuchhaltungV4", "BuchhaltungV1\BuchhaltungV4.csproj", "{0CBCBE23-6FC4-42B5-B5CD-853A997F230A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

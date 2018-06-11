@@ -1,4 +1,4 @@
-﻿namespace BuchhaltungV1
+﻿namespace BuchhaltungV4
 {
     class DataForWeekRecapTable
     {

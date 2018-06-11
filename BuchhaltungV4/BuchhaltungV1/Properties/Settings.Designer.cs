@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BuchhaltungV1.Properties
+namespace BuchhaltungV4.Properties
 {
 
 

@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace BuchhaltungV1
+namespace BuchhaltungV4
 {
     /// <summary>
     /// Interaktionslogik für OutputOfProducts.xaml

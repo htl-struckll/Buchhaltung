@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BuchhaltungV1
+namespace BuchhaltungV4
 {
     public class Product : IComparable<Product>, IDisposable
     {

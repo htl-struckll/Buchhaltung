@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BuchhaltungV1
+namespace BuchhaltungV4
 {
     public class Entry : IComparable<Entry>
     {

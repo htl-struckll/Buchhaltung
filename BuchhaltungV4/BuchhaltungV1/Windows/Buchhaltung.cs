@@ -15,10 +15,9 @@ using Rectangle = System.Windows.Shapes.Rectangle; //To assign the Rectangle to 
 /*
  * Getter and Setter überarbeiten (Wenn Produkte editiert werden)
  * Überall RegularExpression für Zahlen hinzufügen
- * Login implementieren
  * (Add/change/delete) users
  */
-namespace BuchhaltungV1
+namespace BuchhaltungV4
 {
     /// <summary>
     /// Interaktionslogik für Buchhaltung.xaml 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BuchhaltungV1
+namespace BuchhaltungV4
 {
     public class Day : IComparable<Day>
     {
