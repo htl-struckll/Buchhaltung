@@ -1,0 +1,53 @@
+﻿(Für Produkte am Besten Klasse verwenden)
+	Porperties
+		Code
+		Name
+		Menge
+		Art der Menge (Liter/Stück)
+		Steuersatz
+		Preis
+		Anteil Mineral(bei Getränken mit Mineral)
+		Art des Produktes (Für gesamten verbrauch von bier uns so weiter)
+		
+		Produkte mit Button und neuen Window hinzufügen 
+			Eingabe: Art, Preis, Mwst in %, Menge, Art der Menge(Flasche. Stück, Liter)
+
+wenn neue woche erstellt wird
+Neue Woche
+	KalenderWoche
+	Name
+	Datum
+	Kassastand übernahme:
+	
+	Tag Hinzufügen automatisch
+		Daum wird automatisch genommen (Beginnend Montag bis Sonntag (Abfangen wenn bei Sonntag und noch einen Tag hinzufügen will))
+	
+	Eingabe vom Code oder Name (Automatische Suche)
+	Anzahl
+		Verkauft
+		Aufs Haus
+		
+	(Rest wir automatisch zugewiesen (in liste speichern
+	
+	Wenn Hinzugefügt wird live unten in Tabelle welche generiert wird eingefügt (Fürs Hinzufügen neues Window öffnen)
+	
+	Man kann ziwschen Tagen wechseln indem man unten oder oben auf einen die Tage drückt welche (Welcher Tag ausgewählt ist vielleicht mit Enum)
+
+	Per Tastendruck kann man den gesamten Tagesumatz vom ausgeählten Tag anschauen.
+	
+	Per Tastendruck kann man auch die Zusammenfassung auswählen/Ausgaben/Platzgebühren/AlleGespeichertenProdukte ausgeben)
+		Vielleicht DropDownMenu oben 
+		Auch für Produkt hiinzufügen
+		z.B Kategorie: Produckt per Dorpdown dann Hinzufügen/Anschauen
+	
+	
+	Beim Start kann ausgewählt werden welche Woche genommen werden soll. Oder neu erstellen
+	
+	Edit Produkt button
+	
+	Löschen Knopf / Beabeiten
+
+Beim WochenTab:
+	Nächste Woche
+		Lädt die nächste Woche falls vorhanden Oder erzeugt eine neue Woche falls nicht vorhanden
+	

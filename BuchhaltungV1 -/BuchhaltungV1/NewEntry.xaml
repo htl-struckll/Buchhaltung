@@ -1,0 +1,23 @@
+﻿<Window x:Class="BuchhaltungV1.NewEntry"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BuchhaltungV1"
+        mc:Ignorable="d"
+        Title="Neuer Eintrag" Height="300" Width="300">
+    <Grid>
+        <TextBlock Margin="10,22,209.6,211.4" FontSize="16">L-Code:</TextBlock>
+        <TextBox x:Name="inputID" Margin="100,22,125.6,217.4" KeyUp="OnTextInput_ID"></TextBox>
+        <TextBlock x:Name="productOutput" Margin="10,75,9.6,149.4" FontSize="16" Text="Produkt:"/>
+        <TextBlock Margin="10,121,209.6,112.4" FontSize="16"><Run Text="Anzahl:"/></TextBlock>
+        <TextBox x:Name="inputAmount" Margin="100,114,125.6,125.4" KeyUp="InputPrice_keyDown"/>
+        <TextBlock Margin="10,163,193.6,70.4" FontSize="16"><Run Text="Aufs Haus:"/></TextBlock>
+        <TextBox x:Name="inputAmountOnTheHouse" Margin="100,163,125.6,76.4"/>
+        <TextBlock x:Name="priceOutput" Margin="10,205,9.6,28.4" FontSize="16"><Run Text="Preis:"/></TextBlock>
+
+        <Button Click="Ok_Click" Margin="190,237,9.6,5.4">OK</Button>
+        <Button Margin="10,237,193.6,5.4" Click="Cancel_Click">Cancel</Button>
+
+    </Grid>
+</Window>

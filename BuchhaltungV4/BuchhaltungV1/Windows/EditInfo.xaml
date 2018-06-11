@@ -1,0 +1,39 @@
+﻿<Window x:Class="BuchhaltungV1.EditInfo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Edit Info" Height="300" Width="300"
+        ResizeMode="CanMinimize">
+    <Grid>
+        <TextBlock Margin="10,15,216.6,222.4" TextWrapping="Wrap" Text="Name:" FontSize="16" />
+        <TextBox x:Name="NameTextBox" Margin="132,10,63.6,227.4" FontSize="15" />
+
+        <TextBlock HorizontalAlignment="Left" Height="33" Margin="10,53,0,0" TextWrapping="Wrap" Text="WochenNR:"
+                   VerticalAlignment="Top" Width="106" FontSize="16" />
+        <TextBox x:Name="WeekNrTextBox" PreviewTextInput="PreviewWeekNr" Margin="132,53,63.6,184.4" FontSize="15" />
+
+        <TextBlock HorizontalAlignment="Left" Height="33" Margin="10,98,0,0" TextWrapping="Wrap" Text="Kassenstand:"
+                   VerticalAlignment="Top" Width="106" FontSize="16" />
+        <TextBox x:Name="OldCashTextBox" Margin="132,98,63.6,139.4" FontSize="15" />
+
+        <TextBlock HorizontalAlignment="Left" Height="33" Margin="10,146,0,0" TextWrapping="Wrap" Text="Datum:"
+                   VerticalAlignment="Top" Width="106" FontSize="16" />
+        <TextBox x:Name="DateTextBox" Margin="132,142,63.6,95.4" FontSize="15" />
+
+        <Button x:Name="OkBtn" Margin="81,230,118.6,5.4" Content="OK" Click="OkBtn_Click" FontSize="15" />
+        <Button x:Name="CancelBtn" Margin="190,230,9.6,5.4" Content="Abbruch" Click="CancelBtn_Click" FontSize="15" />
+
+        <DatePicker x:Name="DatePicker" SelectedDateChanged="ActDate_Click" HorizontalAlignment="Left" Height="26"
+                    Margin="240,146,0,0" VerticalAlignment="Top" Width="33" BorderBrush="{x:Null}" />
+
+        <Rectangle IsHitTestVisible="True" MouseEnter="ExpandWeek" HorizontalAlignment="Left" Height="29"
+                   Margin="238,143,0,0" Stroke="White" VerticalAlignment="Top" Width="40">
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="/BuchhaltungV1;component/Pictures/kalender.jpg" Stretch="Uniform" />
+            </Rectangle.Fill>
+        </Rectangle>
+
+    </Grid>
+</Window>

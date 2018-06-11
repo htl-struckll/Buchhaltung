@@ -1,0 +1,11 @@
+What needs to be done:
+
+	
+What has been done:	
+	Add editors name
+	add exact date
+	add last KassaStand
+	edit this data
+	
+	output whole week with data
+	

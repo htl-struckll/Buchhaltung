@@ -1,0 +1,271 @@
+﻿<Window x:Class="BuchhaltungV1.Buchhaltung"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Buchhaltung" Height="842.141" Width="1183.329" WindowStyle="None" ResizeMode="NoResize"
+        AllowsTransparency="False">
+    <Grid>
+        <!--Start of the TaskBar-->
+        <Grid x:Name="TaskBar" Background="Gray" Margin="0,0,0.2,796.4" MouseDown="Taskbar_MouseDown">
+            <ComboBox x:Name="ComboBoxProducts" Background="Gray" HorizontalAlignment="Left" Height="26"
+                      Margin="10,10,0,0" VerticalAlignment="Top" Width="125">
+                <ComboBox.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="DarkGray" />
+                </ComboBox.Resources>
+                <Border BorderBrush="DarkGray" BorderThickness="1" Height="24" Width="113">
+                    <TextBlock TextAlignment="Center" Height="22" Width="109" FontSize="13"
+                               MouseDown="AddNewProduct_Click" VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Margin="1.2,0.2,0.2,0.2">
+                        Neues hinzufügen
+                    </TextBlock>
+                </Border>
+
+                <Rectangle IsHitTestVisible="False" Height="2" Width="113" Fill="Black" />
+
+                <Border BorderBrush="DarkGray" BorderThickness="1" Height="24" Width="113">
+                    <TextBlock TextAlignment="Center" Height="22" Width="109" MouseDown="ListAllProducts_Click"
+                               FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Margin="1.2,0.2,0.2,0.2">
+                        Alle Anzeigen
+                    </TextBlock>
+                </Border>
+            </ComboBox>
+
+
+            <ComboBox x:Name="ComboBoxWeek" Background="Gray" HorizontalAlignment="Left" Height="26"
+                      Margin="158,10,0,0" VerticalAlignment="Top" Width="126">
+                <ComboBox.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="DarkGray" />
+                </ComboBox.Resources>
+
+                <TextBlock TextAlignment="Center" Height="22" Width="109" MouseDown="ShowAllEntrys_Click"
+                               FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Margin="1.2,0.2,0.2,0.2">
+                        Zusammenfass.
+                </TextBlock>
+
+                <Rectangle IsHitTestVisible="False" Height="2" Width="113" Fill="Black" />
+
+                <TextBlock TextAlignment="Center" Height="22" Width="109" MouseDown="ChangeWeek_Click"
+                               FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Margin="1.2,0.2,0.2,0.2">
+                        Andere Woche
+                </TextBlock>
+
+                <Rectangle IsHitTestVisible="False" Height="2" Width="113" Fill="Black" />
+
+                <TextBlock TextAlignment="Center" Height="22" Width="109" MouseDown="EditInfo_Click" FontSize="15"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1.2,0.2,0.2,0.2">
+                        Info Bearb.
+                </TextBlock>
+            </ComboBox>
+
+
+            <ComboBox x:Name="ElseComboBox" Background="Gray" HorizontalAlignment="Left" Height="26" Margin="315,10,0,0" VerticalAlignment="Top" Width="126">
+                <ComboBox.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="DarkGray" />
+                </ComboBox.Resources>
+
+                <TextBlock TextAlignment="Center" Height="22" Width="109" MouseDown="BackUp_Click" FontSize="16"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1.2,0.2,0.2,0.2">
+                        Backup
+                </TextBlock>
+
+                <Rectangle IsHitTestVisible="False" Height="2" Width="113" Fill="Black" />
+
+                <TextBlock TextAlignment="Center" Height="22" Width="109" MouseDown="BackUp_Click" FontSize="16"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1.2,0.2,0.2,0.2">
+                        Lade Backup
+                </TextBlock>
+
+                <Rectangle IsHitTestVisible="False" Height="2" Width="113" Fill="Black" />
+
+                <TextBlock TextAlignment="Center" Height="22" Width="109" MouseDown="ToBank_Click" FontSize="16"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1.2,0.2,0.2,0.2">
+                        An Bank
+                </TextBlock>
+            </ComboBox>
+
+
+
+
+            <ComboBox x:Name="InfoComboBox" Background="Gray" Margin="471,10,585,11">
+                <ComboBox.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="DarkGray" />
+                </ComboBox.Resources>
+
+                <TextBlock TextAlignment="Center" Height="22" Width="109" MouseDown="Help_Click" FontSize="16"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1.2,0.2,0.2,0.2">
+                        Hilfe
+                </TextBlock>
+
+                <Rectangle IsHitTestVisible="False" Height="2" Width="113" Fill="Black" />
+
+                <TextBlock TextAlignment="Center" Height="22" Width="109" MouseDown="Credits_Click" FontSize="16"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1.2,0.2,0.2,0.2">
+                        Credits
+                </TextBlock>
+            </ComboBox>
+
+            <ComboBox x:Name="SettingsComboBox" Background="Gray" HorizontalAlignment="Left" Height="26" Margin="628,10,50,0"
+                      VerticalAlignment="Top" Width="126">
+                <ComboBox.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="Gray" />
+                </ComboBox.Resources>
+            </ComboBox>
+
+
+            <Rectangle MouseDown="CloseProgramm_CLICK"    MouseEnter="MouseEnterChangeColorFromDarkToGray"
+                       MouseLeave="MouseLeaveChangeColorFromGrayToDarkGray" Fill="DarkGray" Stroke="Black" HorizontalAlignment="Left" Height="46" Margin="1144,0,0,0" VerticalAlignment="Top" Width="39"/>
+            <TextBlock IsHitTestVisible="False" HorizontalAlignment="Left" Height="32" Margin="1157,9,0,0" TextWrapping="Wrap" Text="X" VerticalAlignment="Top" Width="23" FontWeight="Bold" FontSize="22"/>
+
+            <Rectangle MouseDown="MinimizeProgramm_CLICK"    MouseEnter="MouseEnterChangeColorFromDarkToGray"
+                       MouseLeave="MouseLeaveChangeColorFromGrayToDarkGray" Fill="DarkGray" Stroke="Black" HorizontalAlignment="Left" Height="46" Margin="1104,0,0,0" VerticalAlignment="Top" Width="40"/>
+            <TextBlock IsHitTestVisible="False" HorizontalAlignment="Left" Height="32" Margin="1121,9,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Width="23" FontWeight="Bold" FontSize="22"/>
+
+
+            <!--All the textBlocks and rectangles-->
+            <Rectangle Fill="DarkGray" MouseDown="MouseDownExpandProducts"
+                       MouseEnter="MouseEnterChangeColorFromDarkToGray"
+                       MouseLeave="MouseLeaveChangeColorFromGrayToDarkGray" HorizontalAlignment="Left" Height="30"
+                       Margin="10,7,0,0" Stroke="#FF1B1B1B" VerticalAlignment="Top" Width="125" IsHitTestVisible="True" />
+            <TextBlock Margin="10,7,1048,10" IsHitTestVisible="False" HorizontalAlignment="Center"
+                       VerticalAlignment="Center" FontSize="16">
+                Produkt
+            </TextBlock>
+
+            <Rectangle Fill="DarkGray" MouseDown="MouseDownExpandWeek" MouseEnter="MouseEnterChangeColorFromDarkToGray"
+                       MouseLeave="MouseLeaveChangeColorFromGrayToDarkGray" Stroke="Black" IsHitTestVisible="True"
+                       HorizontalAlignment="Left" Height="31" Margin="158,7,0,0" VerticalAlignment="Top" Width="126" />
+            <TextBlock Margin="194,12,933,13" IsHitTestVisible="False" HorizontalAlignment="Center"
+                       VerticalAlignment="Center" FontSize="16">
+                Woche
+            </TextBlock>
+
+            <Rectangle Fill="DarkGray"  MouseEnter="MouseEnterChangeColorFromDarkToGray"
+                       MouseLeave="MouseLeaveChangeColorFromGrayToDarkGray" HorizontalAlignment="Left"
+                       MouseDown="MouseDownExpandElse"
+                       IsHitTestVisible="True" Height="27" Margin="315,10,0,0" Stroke="Black" VerticalAlignment="Top"
+                       Width="126" />
+            <TextBlock Margin="315,12,742,13" IsHitTestVisible="False" TextAlignment="Center"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Width="126">
+                Sonstige
+            </TextBlock>
+
+            <Rectangle Fill="DarkGray"  MouseEnter="MouseEnterChangeColorFromDarkToGray"
+                       MouseLeave="MouseLeaveChangeColorFromGrayToDarkGray" IsHitTestVisible="True"
+                       MouseDown="MouseDownExpandInfo"
+                       HorizontalAlignment="Left" Height="29" Margin="471,10,0,0" Stroke="Black"
+                       VerticalAlignment="Top" Width="127" />
+            <TextBlock Margin="472,12,585,12" IsHitTestVisible="False" TextAlignment="Center"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Width="126">
+                Info
+            </TextBlock>
+
+            <Rectangle Fill="DarkGray"  MouseEnter="MouseEnterChangeColorFromDarkToGray"
+                       MouseLeave="MouseLeaveChangeColorFromGrayToDarkGray" IsHitTestVisible="True"
+                       MouseDown="MouseDownExpandSettings"
+                       HorizontalAlignment="Left" Height="30" Margin="627,9,0,0" Stroke="Black" VerticalAlignment="Top"
+                       Width="127" />
+            <TextBlock Margin="628,13,429,12" IsHitTestVisible="False" TextAlignment="Center"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Width="126">
+                Einstellungen
+            </TextBlock>
+
+
+        </Grid>
+
+        <!--Start of the week info-->
+        <Grid x:Name="WeekInfo" Margin="55.2,74.2,36.6,655.8">
+            <Rectangle Fill="LightGray" Stroke="Black" Margin="0,0,10,16" />
+            <TextBlock x:Name="WeekNrOutput" HorizontalAlignment="Left" FontSize="20" Height="36"
+                           Margin="10,10,0,0" TextWrapping="Wrap" Text="WochenNR:" VerticalAlignment="Top" Width="143" />
+            <TextBlock x:Name="PrevCashDeskOutput" FontSize="20" HorizontalAlignment="Left" Height="42"
+                           Margin="421,10,0,0" TextWrapping="Wrap" Text="Alter Kassastand:" VerticalAlignment="Top"
+                           Width="290" />
+            <TextBlock x:Name="DateOutput" FontSize="20" HorizontalAlignment="Left" Height="50" Margin="10,56,0,0"
+                           TextWrapping="Wrap" VerticalAlignment="Top" Width="247">
+                    <Run Text="Datum:" />
+            </TextBlock>
+            <TextBlock x:Name="NameOutput" FontSize="20" HorizontalAlignment="Left" Height="41" Margin="206,10,0,0"
+                           TextWrapping="Wrap" VerticalAlignment="Top" Width="247">
+                    <Run Text="Name:" />
+            </TextBlock>
+            <TextBlock x:Name="ToBankOutput" FontSize="20" HorizontalAlignment="Left" Height="50"
+                           Margin="206,57,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="247">
+                    <Run Text="An Bank:" />
+            </TextBlock>
+            <TextBlock x:Name="DailyIincomeOutput" FontSize="20" HorizontalAlignment="Left" Height="49"
+                           Margin="421,61,0,0" TextWrapping="Wrap" Text="Heutige Einnahmen:" VerticalAlignment="Top"
+                           Width="290" />
+            <TextBlock x:Name="In10Output" FontSize="20" HorizontalAlignment="Left" Height="42" Margin="716,10,0,0"
+                           TextWrapping="Wrap" Text="Mwst in 10%:" VerticalAlignment="Top" Width="286" />
+            <TextBlock x:Name="In20Output" FontSize="20" HorizontalAlignment="Left" Height="45" Margin="716,61,0,0"
+                           TextWrapping="Wrap" Text="Mwst in 20%:" VerticalAlignment="Top" Width="293" />
+
+        </Grid>
+
+
+        <Grid x:Name="Table" Margin="0,235,0,0">
+            <!--Start of the table-->
+            <DataGrid Background="LightGray" x:Name="TableDay" MouseDoubleClick="EditTable_MouseDoubleClick"
+                      CanUserAddRows="True" CanUserSortColumns="True" AutoGenerateColumns="True" Margin="0,0,230,0"
+                      FontSize="20">
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="-" Binding="{Binding Path=C}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="L-Code" Binding="{Binding Path=Id}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Produkt" Binding="{Binding Path=Name}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Anzahl" Binding="{Binding Path=Amount}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="aufs Haus" Binding="{Binding Path=OnTheHouse}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Preis (€)" Binding="{Binding Path=Price}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Total (€)" Binding="{Binding Path=All}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Totale" Binding="{Binding Path=FinalAmount}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Menge in" Binding="{Binding Path=KindOfAmount}" IsReadOnly="True" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Rectangle x:Name="RectangleNewEntry" IsHitTestVisible="True" MouseDown="AddNewEntry_Click"
+                       MouseEnter="MouseEnterChangeColorFromLightToDarkGray"
+                       MouseLeave="MouseLeaveChangeColorFromDarkToLightGray" HorizontalAlignment="Left" Height="51"
+                       Margin="964,546,0,0" Stroke="Black" VerticalAlignment="Top" Width="209" Fill="LightGray" />
+            <TextBlock IsHitTestVisible="False" HorizontalAlignment="Left" Height="40" Margin="964,557,0,0"
+                       TextWrapping="Wrap" Text="Neuer Eintrag" FontSize="20" TextAlignment="Center"
+                       VerticalAlignment="Top" Width="209" />
+
+            <ComboBox x:Name="DropDownWeek" DropDownOpened="OpenedDropDownDay" DropDownClosed="ClosedDropDownDay"
+                      HorizontalAlignment="Left" Margin="987,0,0,0" VerticalAlignment="Top" Width="159" Height="39">
+                <RadioButton x:Name="Monday" Checked="MondayChecked" FontSize="16">Montag</RadioButton>
+                <RadioButton x:Name="Tuesday" Checked="TuesdayChecked" FontSize="16">Dienstag</RadioButton>
+                <RadioButton x:Name="Wednsday" Checked="WednsdayChecked" FontSize="16">Mittwoch</RadioButton>
+                <RadioButton x:Name="Thursday" Checked="ThursdayChecked" FontSize="16">Donnerstag</RadioButton>
+                <RadioButton x:Name="Friday" Checked="FridayChecked" FontSize="16">Freitag</RadioButton>
+                <RadioButton x:Name="Saturday" Checked="SaturdayChecked" FontSize="16">Samstag</RadioButton>
+                <RadioButton x:Name="Sunday" Checked="SundayChecked" FontSize="16">Sonntag</RadioButton>
+            </ComboBox>
+
+            <Rectangle Fill="LightGray" IsHitTestVisible="True" MouseDown="MouseDownExpandDaysInWeek"
+                       MouseEnter="MouseEnterChangeColorFromLightToDarkGray"
+                       MouseLeave="MouseLeaveChangeColorFromDarkToLightGray" HorizontalAlignment="Left" Height="39"
+                       Margin="987,0,0,0" Stroke="#FF1B1B1B" VerticalAlignment="Top" Width="161" />
+            <TextBlock x:Name="DayOutput" IsHitTestVisible="False" TextAlignment="Center" Margin="987,5,37.2,0"
+                       VerticalAlignment="Top" Height="39" Text="-" FontSize="20" />
+
+            <TextBlock x:Name="ArrowDropDown" Opacity="100" IsHitTestVisible="False" HorizontalAlignment="Left"
+                       Height="39" Margin="1107,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="49">
+                <TextBlock.Background>
+                    <ImageBrush ImageSource="/BuchhaltungV1;component/Pictures/arrow down.png" Stretch="Uniform" />
+                </TextBlock.Background>
+            </TextBlock>
+
+            <TextBlock x:Name="ArrowDropUp" Opacity="0" IsHitTestVisible="False" HorizontalAlignment="Left" Height="39"
+                       Margin="1107,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="49">
+                <TextBlock.Background>
+                    <ImageBrush ImageSource="/BuchhaltungV1;component/Pictures/arrow up.png" Stretch="Uniform" />
+                </TextBlock.Background>
+            </TextBlock>
+        </Grid>
+    </Grid>
+</Window>

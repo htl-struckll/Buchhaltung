@@ -1,0 +1,92 @@
+ string line = "[monday]";
+                    while (line != "[end]")
+                    {
+                        //Change to switsches and cases
+                        if (line == "[monday]")
+                        {
+                            CurrDay = DayOfTheWeek.monday;
+                            while (line != "[tuesday]" && line != "[end]")
+                            {
+                                line = reader.ReadLine();
+                                if (line != "[tuesday]")
+                                    SplitLoadedEntry(line);
+                            }
+                        }
+                        else if (line == "[tuesday]")
+                        {
+                            CurrDay = DayOfTheWeek.tuesday;
+                            while (line != "[wednesday]" && line != "[end]")
+                            {
+                                line = reader.ReadLine();
+                                if (line != "[wednesday]")
+                                    SplitLoadedEntry(line);
+                            }
+                        }
+                        else if (line == "[wednesday]")
+                        {
+                            CurrDay = DayOfTheWeek.wednesday;
+                            while (line != "[thursday]" && line != "[end]")
+                            {
+                                line = reader.ReadLine();
+                                if (line != "[thursday]") 
+                                    SplitLoadedEntry(line);
+                            }
+                        }
+                        else if (line == "[thursday]")
+                        {
+                            CurrDay = DayOfTheWeek.thursday;
+                            while (line != "[firday]" && line != "[end]")
+                            {
+                                line = reader.ReadLine();
+                                if (line != "[friday]")
+                                    SplitLoadedEntry(line);
+                            }
+                        }
+                        else if (line == "[friday]")
+                        {
+                            CurrDay = DayOfTheWeek.friday;
+                            while (line != "[saturday]" && line != "[end]")
+                            {
+                                line = reader.ReadLine();
+                                if (line != "[saturday]")
+                                    SplitLoadedEntry(line);
+                            }
+                        }
+                        else if (line == "[saturday]")
+                        {
+                            CurrDay = DayOfTheWeek.thursday;
+                            while (line != "[sunday]" && line != "[end]")
+                            {
+                                line = reader.ReadLine();
+                                if (line != "[sunday]")
+                                    SplitLoadedEntry(line);
+                            }
+                        }
+                        else if (line == "[sunday]")
+                        {
+                            CurrDay = DayOfTheWeek.sunday;
+                            while (line != "[info]" && line != "[end]")
+                            {
+                                line = reader.ReadLine();
+                                if(line != "[info]")
+                                    SplitLoadedEntry(line);
+                            }
+                        }
+                        else if (line == "[info]")
+                        {
+                            while (line != "[end]")
+                            {
+                                line = reader.ReadLine();
+                                string[] splittedLine = line.Split(';');
+
+                                CurrWeek.ExactTime = Convert.ToDateTime(splittedLine[0]);
+                                CurrWeek.EditName = splittedLine[1];
+                                CurrWeek.LastChashDesk = Convert.ToInt32(splittedLine[2]);
+                                break;
+                            }
+                        }
+                    }
+                }
+                Log("Alle Einträge wurden geladen!");
+                CurrDay = DayOfTheWeek.monday;
+                FillEntrys();

@@ -1,0 +1,22 @@
+﻿<Window x:Class="BuchhaltungV1.ToBankWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="An Bank" Height="130.01" Width="206.467"
+        ResizeMode="NoResize">
+    <Grid>
+        <TextBlock HorizontalAlignment="Left" Height="37" Margin="10,10,0,0" TextWrapping="Wrap" Text="An Bank:"
+                   VerticalAlignment="Top" Width="94" FontSize="18" />
+        <TextBox x:Name="ToBankInput" HorizontalAlignment="Left" Height="26" Margin="89,10,0,0" TextWrapping="Wrap"
+                 Text="" VerticalAlignment="Top" Width="92" FontSize="18" KeyDown="ChecksEnter_KeyDown"/>
+
+        <Button Content="Ok" x:Name="OkBtn" HorizontalAlignment="Left" Height="28" Margin="125,52,0,0"
+                VerticalAlignment="Top" Width="56" FontSize="16" Click="OkBtn_Click" />
+        <Button Content="Abbruch" x:Name="CancelBtn" HorizontalAlignment="Left" Height="28" Margin="62,52,0,0"
+                VerticalAlignment="Top" Width="52" Click="cancelBtn_Click" />
+
+
+    </Grid>
+</Window>

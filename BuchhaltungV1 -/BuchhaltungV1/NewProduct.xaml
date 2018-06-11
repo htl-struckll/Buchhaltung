@@ -1,0 +1,39 @@
+﻿<Window x:Class="BuchhaltungV1.NewProduct"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BuchhaltungV1"
+        mc:Ignorable="d"
+        Title="Neues Produkt" Height="300" Width="300"
+        ResizeMode="NoResize">
+    <Grid Margin="0,0,0,-14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="204*"/>
+            <RowDefinition Height="79*"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="idOfProduct"  Margin="10,4,229,165.667" >L-Code:</TextBlock>
+        <TextBlock Margin="10,24,229,146.667">Artikel:</TextBlock>
+        <TextBlock Margin="10,48,239,122.667">Preis:</TextBlock>
+        <TextBlock Margin="10,77,239,93.667">Steuer:</TextBlock>
+        <TextBlock Margin="10,115,234,55.667">Menge:</TextBlock>
+        <TextBlock Margin="10,143,197,27.667">Art der Menge:</TextBlock>
+
+        <TextBox x:Name="NameOfTheProdukt" Margin="58,24,111,153.667"></TextBox>
+        <TextBox x:Name="PriceOfProduct" Margin="58,50,111,127.667"></TextBox>
+        <TextBox x:Name="TaxOfProduct" Margin="58,77,111,100.667"></TextBox>
+
+        <ComboBox  x:Name="TaxDropDown" SelectionChanged="UpdateTax" HorizontalAlignment="Left" Height="26" Margin="191,77,0,0" VerticalAlignment="Top" Width="91"></ComboBox>
+        <TextBlock Margin="191,80,10,100.667" IsHitTestVisible="False" TextAlignment="Center" >-</TextBlock>
+
+        <TextBox x:Name="AmountOfProduct" Margin="58,112,111,65.667"></TextBox>
+        <TextBox x:Name="KindOfAmount" Margin="95,143,74,34.667"></TextBox>
+
+        <ComboBox x:Name="KindOfAmoutDropDown" SelectionChanged="UpdateKindOfAmount" HorizontalAlignment="Left" Height="26" Margin="223,143,0,0" VerticalAlignment="Top" Width="59"></ComboBox>
+        <TextBlock  Margin="223,145,10,27.667" TextAlignment="Center" IsHitTestVisible="False">-</TextBlock>
+
+        <Button Margin="10,10,159,25" FontSize="22" Click="SaveProduct_CLICK" Grid.Row="1">Save</Button>
+        <Button Margin="149,10,10,25" Grid.Row="1"  FontSize="22" Click="CancelButton_Click">Cancel</Button>
+
+    </Grid>
+</Window>

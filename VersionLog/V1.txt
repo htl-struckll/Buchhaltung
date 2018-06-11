@@ -1,0 +1,19 @@
+What has been done:
+	Add products
+	edit products
+	view all products
+	search products
+	load products
+	save products
+	
+	add entrys
+	edit entrys
+	delete entrys
+	sort entrys
+	save entrys
+	delete entrys
+	
+	new week
+	select another week
+	
+	generate backUp

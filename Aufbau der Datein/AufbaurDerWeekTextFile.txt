@@ -1,0 +1,11 @@
+//Name der Datei wie wie Woche
+[Monday]
+//Einträge PRODUCT ID , amount, amountOnTheHouse, price, toBank
+[TuesDay]
+//Einträge
+
+//usw
+
+[info]
+//date,name,oldCash,BankMontag,BankDienstag,....
+[end]

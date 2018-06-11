@@ -1,0 +1,148 @@
+﻿<Window x:Class="BuchhaltungV1.Buchhaltung"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BuchhaltungV1"
+        mc:Ignorable="d"
+        Title="Buchhaltung" Height="842.141" Width="1183.329" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="False">
+    <Grid >
+        <Grid x:Name="TaskBar"  Background="Gray" Margin="0,0,0.2,796.4"  MouseDown="Taskbar_MouseDown" >
+            <ComboBox Background="Gray" HorizontalAlignment="Left" Height="26" Margin="10,10,0,0" VerticalAlignment="Top" Width="125">
+                <ComboBox.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="DarkGray" />
+                </ComboBox.Resources>
+                <Border BorderBrush="Black" BorderThickness="1" Height="24" Width="113">
+                    <TextBlock   TextAlignment="Center" Height="22" Width="109" FontSize="13"  MouseDown="AddNewProduct_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1.2,0.2,0.2,0.2">Neues hinzufügen</TextBlock>
+                </Border>
+                <Border BorderBrush="Black" BorderThickness="1" Height="24" Width="113">
+                    <TextBlock   TextAlignment="Center" Height="22" Width="109"  MouseDown="ListAllProducts_Click" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1.2,0.2,0.2,0.2">Alle Anzeigen</TextBlock>
+                </Border>
+            </ComboBox>
+
+
+            <ComboBox Background="Gray" HorizontalAlignment="Left" Height="26" Margin="158,10,0,0" VerticalAlignment="Top" Width="126">
+                <ComboBox.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="DarkGray" />
+                </ComboBox.Resources>
+                <Border BorderBrush="Black" BorderThickness="1" Height="24" Width="113">
+                    <TextBlock   TextAlignment="Center" Height="22" Width="109" MouseDown="ShowAllEntrys_Click" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1.2,0.2,0.2,0.2">Ganze Woche</TextBlock>
+                </Border>
+                <Border BorderBrush="Black" BorderThickness="1" Height="24" Width="113">
+                    <TextBlock   TextAlignment="Center" Height="22" Width="109" MouseDown="ChangeWeek_Click" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1.2,0.2,0.2,0.2">Andere Woche</TextBlock>
+                </Border>
+            </ComboBox>
+
+
+            <ComboBox Background="Gray" HorizontalAlignment="Left" Height="26" Margin="315,10,0,0" VerticalAlignment="Top" Width="126">
+                <ComboBox.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="DarkGray" />
+                </ComboBox.Resources>
+                <Border BorderBrush="Black" BorderThickness="1" Height="24" Width="113">
+                    <TextBlock   TextAlignment="Center" Height="22" Width="109" MouseDown="BackUp_Click" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1.2,0.2,0.2,0.2">Backup</TextBlock>
+                </Border>
+            </ComboBox>
+
+
+            <ComboBox Background="Gray" HorizontalAlignment="Left" Height="26" Margin="628,10,0,0" VerticalAlignment="Top" Width="126">
+                <ComboBox.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="Gray" />
+                </ComboBox.Resources>
+            </ComboBox>
+
+            <ComboBox Background="Gray" Margin="471,10,585,11">
+                <ComboBox.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="DarkGray" />
+                </ComboBox.Resources>
+                <Border BorderBrush="Black" BorderThickness="1" Height="24" Width="113">
+                    <TextBlock   TextAlignment="Center" Height="22" Width="109" MouseDown="Credits_Click" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1.2,0.2,0.2,0.2">Credits</TextBlock>
+                </Border>
+            </ComboBox>
+
+
+            <Button Background="Gray" Margin="1104,0,39,0" FontSize="24" Click="MinimiteProgramm_CLICK">-</Button>
+            <Button Background="Gray" Margin="1144,0,0,0" FontSize="24" Click="CloseProgramm_CLICK">X</Button>
+
+
+            <!--All the textBlocks and rectangles-->
+            <Rectangle Fill="DarkGray" HorizontalAlignment="Left" Height="30" Margin="10,7,0,0" Stroke="#FF1B1B1B" VerticalAlignment="Top" Width="125" IsHitTestVisible="False" />
+            <TextBlock Margin="10,7,1048,10" IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16">Produkt</TextBlock>
+
+            <Rectangle Fill="DarkGray" Stroke="Black" IsHitTestVisible="False" HorizontalAlignment="Left" Height="31" Margin="158,7,0,0" VerticalAlignment="Top" Width="126"/>
+            <TextBlock Margin="194,12,933,13" IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16">Woche</TextBlock>
+
+            <Rectangle Fill="DarkGray" HorizontalAlignment="Left" IsHitTestVisible="False" Height="27" Margin="315,10,0,0" Stroke="Black" VerticalAlignment="Top" Width="126"/>
+            <TextBlock Margin="315,12,742,13" IsHitTestVisible="False" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Width="126">Sonstige</TextBlock>
+
+            <Rectangle Fill="DarkGray" IsHitTestVisible="False" HorizontalAlignment="Left" Height="29" Margin="471,10,0,0" Stroke="Black" VerticalAlignment="Top" Width="127"/>
+            <TextBlock Margin="472,12,585,12" IsHitTestVisible="False" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Width="126">Info</TextBlock>
+
+            <Rectangle Fill="DarkGray" IsHitTestVisible="False" HorizontalAlignment="Left" Height="30" Margin="627,9,0,0" Stroke="Black" VerticalAlignment="Top" Width="127"/>
+            <TextBlock Margin="628,13,429,12" IsHitTestVisible="False" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Width="126">Einstellungen</TextBlock>
+
+        </Grid>
+
+        <Grid x:Name="Table" Margin="0,235,0,0">
+            <!--Start of the table-->
+            <DataGrid  Background="LightGray" x:Name="TableDay" MouseDoubleClick="EditTable_MouseDoubleClick" CanUserAddRows="True" CanUserSortColumns="True"  AutoGenerateColumns="True" Margin="0,0,230,0" FontSize="20">
+
+                <DataGrid.Columns >
+                    <DataGridTextColumn Header="-" Binding="{Binding Path=C}" IsReadOnly="True">
+
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="L-Code" Binding="{Binding Path=ID}" IsReadOnly="True">
+
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Produkt" Binding="{Binding Path=Name}" IsReadOnly="True">
+
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Anzahl" Binding="{Binding Path=Amount}" IsReadOnly="True">
+
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="aufs Haus" Binding="{Binding Path=OnTheHouse}" IsReadOnly="True">
+
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Preis (€)" Binding="{Binding Path=Price}" IsReadOnly="True">
+
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Total (€)" Binding="{Binding Path=All}" IsReadOnly="True">
+
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Totale" Binding="{Binding Path=FinalAmount}" IsReadOnly="True">
+
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="menge in" Binding="{Binding Path=KindOfAmount}" IsReadOnly="True">
+
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <TextBlock Margin="629,5,230.2,563.4" IsHitTestVisible="False" TextAlignment="Center" FontSize="20">Edit</TextBlock>
+
+            <Button Margin="964,546,10.2,10.4" FontSize="20" Click="AddNewEntry_Click" RenderTransformOrigin="0.5,0.5">
+                <Button.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-0.701"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Button.RenderTransform> Neuer Eintrag
+            </Button>
+
+            <ComboBox HorizontalAlignment="Left" Margin="987,0,0,0" VerticalAlignment="Top" Width="159" Height="39">
+                <RadioButton x:Name="monday" Checked="MondayChecked" FontSize="16">Montag</RadioButton>
+                <RadioButton x:Name="tuesday" Checked="TuesdayChecked" FontSize="16">Dienstag</RadioButton>
+                <RadioButton x:Name="wednsday" Checked="WednsdayChecked" FontSize="16">Mittwoch</RadioButton>
+                <RadioButton x:Name="thursday" Checked="ThursdayChecked" FontSize="16">Donnerstag</RadioButton>
+                <RadioButton x:Name="friday" Checked="FridayChecked" FontSize="16">Freitag</RadioButton>
+                <RadioButton x:Name="saturday" Checked="SaturdayChecked" FontSize="16">Samstag</RadioButton>
+                <RadioButton x:Name="sunday" Checked="SundayChecked" FontSize="16">Sonntag</RadioButton>
+            </ComboBox>
+
+            <Rectangle Fill="DarkGray" IsHitTestVisible="False" HorizontalAlignment="Left" Height="39" Margin="987,0,0,0" Stroke="#FF1B1B1B" VerticalAlignment="Top" Width="161"/>
+            <TextBlock x:Name="dayOutput" IsHitTestVisible="False"  TextAlignment="Center" Margin="987,5,37.2,0" VerticalAlignment="Top" Height="39" Text="-" FontSize="20"/>
+        </Grid>
+
+    </Grid>
+</Window>

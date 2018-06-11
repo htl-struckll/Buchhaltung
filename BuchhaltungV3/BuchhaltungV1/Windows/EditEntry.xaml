@@ -1,0 +1,28 @@
+﻿<Window x:Class="BuchhaltungV1.EditDataGrid"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Edit Data" Height="300" Width="300"
+        ResizeMode="CanMinimize">
+    <Grid>
+        <TextBlock Margin="10,10,223.6,226.4" FontSize="16">Num: </TextBlock>
+        <TextBox x:Name="NumInput" Margin="110,10,124.6,226.4" TextChanged="TextBox_TextChanged" FontSize="14" />
+
+        <TextBlock Margin="10,58,223.6,178.4" FontSize="16">ID:</TextBlock>
+        <TextBox x:Name="IdInput" TextChanged="IdChange" Margin="110,58,124.6,178.4" FontSize="14" />
+
+        <TextBlock x:Name="OutputName" Margin="181,58,4.6,178.4" FontSize="16" />
+
+        <TextBlock Margin="10,107,223.6,129.4" FontSize="16">Anzahl:</TextBlock>
+        <TextBox x:Name="AmountInput" Margin="110,97,124.6,139.4" FontSize="14" />
+
+        <TextBlock Margin="10,162,199.6,74.4" FontSize="16">Aufs Haus:</TextBlock>
+        <TextBox x:Name="OnTheHouseInput" Margin="110,162,124.6,74.4" FontSize="14" />
+
+        <Button Margin="216,228,9.6,10.4" FontSize="14" Click="Cancel_Click">Abbruch</Button>
+        <Button Margin="110,228,107.6,10.4" FontSize="14" Click="Delete_Click">Löschen</Button>
+        <Button Margin="10,228,208.6,10.4" FontSize="14" Click="Edit_Click">Bearb.</Button>
+    </Grid>
+</Window>
