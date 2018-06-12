@@ -22,7 +22,6 @@
 
             <Button Click="StartProgramm_Click" Margin="419,303,15.6,10.4" FontSize="18">OK</Button>
 
-
             <Expander x:Name="NewWeekExpander" Header="Für neue Woche" AllowDrop="False" HorizontalAlignment="Left"
                   Height="190" Margin="10,99,0,0" VerticalAlignment="Top" Width="494" FontSize="16">
                 <Grid Background="White" Margin="-9,0,8.8,0">

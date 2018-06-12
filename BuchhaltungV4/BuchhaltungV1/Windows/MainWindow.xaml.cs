@@ -17,8 +17,8 @@ namespace BuchhaltungV4
     {
         #region var
 
-        private int _isAdmin = 1;
-        const string ConnectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=Buchhaltung;SslMode=none";
+        public int IsAdmin = 1;
+        private const string ConnectionString = Buchhaltung.ConnectionString;
         private static readonly MySqlConnection Connection = new MySqlConnection(ConnectionString);
         #endregion
 
@@ -188,7 +188,7 @@ namespace BuchhaltungV4
         /// </summary>
         private void AnimateAndCheck()
         {
-            if (_isAdmin.Equals(0)) return; //returns if user is not an admin
+            if (IsAdmin.Equals(0)) return; //returns if user is not an admin
 
             Expander ex = NewWeekExpander;
             if (WeekNrTextBox.Text != "" && File.Exists(@"Data\" + WeekNrTextBox.Text + @".week") ||
@@ -278,6 +278,7 @@ namespace BuchhaltungV4
         public void SetLoggedIn()
         {
             LoginGrid.Opacity = 0;
+            LoginGrid.IsHitTestVisible = false;
             MainGrid.Opacity = 100;
         }
         /// <summary>
@@ -307,16 +308,17 @@ namespace BuchhaltungV4
                 {
                     if (File.Exists(@"Data\" + WeekNrTextBox.Text + @".week")) //Week does exist
                     {
-                        Buchhaltung b = new Buchhaltung(WeekNrTextBox.Text);
+                        Buchhaltung b = new Buchhaltung(WeekNrTextBox.Text, IsAdmin);
                         b.Show();
                     }
                     else
                     {
-                        if (OldCashDesk.Text.Length == 0) //If one if is not correct writes error and returns
+                        //If one if is not correct writes error and returns
+                        if (OldCashDesk.Text.Length == 0) 
                         {
                             Buchhaltung.Log("Kein alter Kassenstand eingetragen!");
                             return;
-                        }else if (NameInput.Text.Length == 0)
+                        }if (NameInput.Text.Length == 0)
                         {
                             Buchhaltung.Log("Kein Name eingetragen!");
                             return;
@@ -326,7 +328,7 @@ namespace BuchhaltungV4
                         if (oldCashDeskStr.Contains("€"))
                             oldCashDeskStr = oldCashDeskStr.Replace('€', ' ').Trim();
                         Buchhaltung b = new Buchhaltung(WeekNrTextBox.Text, NameInput.Text,
-                            Convert.ToDateTime(DateTextBox.Text), Convert.ToDouble(oldCashDeskStr));
+                            Convert.ToDateTime(DateTextBox.Text), Convert.ToDouble(oldCashDeskStr),IsAdmin);
                         b.Show();
                     }
 
@@ -337,8 +339,8 @@ namespace BuchhaltungV4
             }
             catch (Exception e)
             {
-                Buchhaltung.Log(e.Message);
                 Buchhaltung.SaveErrorMsg(e);
+                Buchhaltung.Log(e.Message);
             }
         }
 
@@ -351,9 +353,9 @@ namespace BuchhaltungV4
             {
                 if (CheckLoginInfo(UsernameInput.Text, PasswordInput.Password.ToCharArray())) { 
                     SetLoggedIn();
-                    _isAdmin = GetIsAdmin(UsernameInput.Text);
+                    IsAdmin = GetIsAdmin(UsernameInput.Text);
 
-                    if(_isAdmin.Equals(2))
+                    if(IsAdmin.Equals(2))
                         Buchhaltung.Log("Es ist ein error bei der Admin authentifizierung aufgetreten! Sie sind jetzt ein User.");
                 }
                 else

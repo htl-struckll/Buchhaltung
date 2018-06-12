@@ -109,19 +109,32 @@
                 </TextBlock>
             </ComboBox>
 
-            <ComboBox x:Name="SettingsComboBox" Background="Gray" HorizontalAlignment="Left" Height="26" Margin="628,10,50,0"
+            <ComboBox x:Name="UserComboBox" Background="Gray" HorizontalAlignment="Left" Height="26" Margin="628,10,50,0"
                       VerticalAlignment="Top" Width="126">
                 <ComboBox.Resources>
-                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="Gray" />
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="DarkGray" />
                 </ComboBox.Resources>
-            </ComboBox>
 
+                <TextBlock TextAlignment="Center" Height="22" Width="109" MouseDown="Logout_Click" FontSize="16"
+                           VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1.2,0.2,0.2,0.2">
+                    Abmelden
+                </TextBlock>
+
+                <Rectangle IsHitTestVisible="False" Height="2" Width="113" Fill="Black" />
+                
+                <Grid x:Name="AdminUserGrid">
+                    <TextBlock TextAlignment="Center" Height="22" Width="109" MouseDown="ShowAllUsers_Click" FontSize="16"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1.2,0.2,0.2,0.2">
+                        Administration
+                    </TextBlock>
+                </Grid>
+            </ComboBox>
 
             <Rectangle MouseDown="CloseProgramm_CLICK"    MouseEnter="MouseEnterChangeColorFromDarkToGray"
                        MouseLeave="MouseLeaveChangeColorFromGrayToDarkGray" Fill="DarkGray" Stroke="Black" HorizontalAlignment="Left" Height="46" Margin="1144,0,0,0" VerticalAlignment="Top" Width="39"/>
             <TextBlock IsHitTestVisible="False" HorizontalAlignment="Left" Height="32" Margin="1157,9,0,0" TextWrapping="Wrap" Text="X" VerticalAlignment="Top" Width="23" FontWeight="Bold" FontSize="22"/>
 
-            <Rectangle MouseDown="MinimizeProgramm_CLICK"    MouseEnter="MouseEnterChangeColorFromDarkToGray"
+            <Rectangle MouseDown="MinimizeProgramm_Click"    MouseEnter="MouseEnterChangeColorFromDarkToGray"
                        MouseLeave="MouseLeaveChangeColorFromGrayToDarkGray" Fill="DarkGray" Stroke="Black" HorizontalAlignment="Left" Height="46" Margin="1104,0,0,0" VerticalAlignment="Top" Width="40"/>
             <TextBlock IsHitTestVisible="False" HorizontalAlignment="Left" Height="32" Margin="1121,9,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Width="23" FontWeight="Bold" FontSize="22"/>
 
@@ -166,15 +179,13 @@
 
             <Rectangle Fill="DarkGray"  MouseEnter="MouseEnterChangeColorFromDarkToGray"
                        MouseLeave="MouseLeaveChangeColorFromGrayToDarkGray" IsHitTestVisible="True"
-                       MouseDown="MouseDownExpandSettings"
+                       MouseDown="MouseDownExpandUserSettings"
                        HorizontalAlignment="Left" Height="30" Margin="627,9,0,0" Stroke="Black" VerticalAlignment="Top"
                        Width="127" />
-            <TextBlock Margin="628,13,429,12" IsHitTestVisible="False" TextAlignment="Center"
-                       HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Width="126">
-                Einstellungen
+            <TextBlock Margin="628,13,432,12" IsHitTestVisible="False" TextAlignment="Center"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Width="123">
+                Benutzer
             </TextBlock>
-
-
         </Grid>
 
         <!--Start of the week info-->
@@ -206,7 +217,6 @@
                            TextWrapping="Wrap" Text="Mwst in 20%:" VerticalAlignment="Top" Width="293" />
 
         </Grid>
-
 
         <Grid x:Name="Table" Margin="0,235,0,0">
             <!--Start of the table-->

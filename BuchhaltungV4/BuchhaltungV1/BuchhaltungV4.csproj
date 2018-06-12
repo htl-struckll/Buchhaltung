@@ -94,6 +94,7 @@
     <Compile Include="Data\DataForWeekRecapTable.cs" />
     <Compile Include="Data\Day.cs" />
     <Compile Include="Data\DayOfTheWeek.cs" />
+    <Compile Include="Data\User.cs" />
     <Compile Include="Windows\Buchhaltung.cs" />
     <Compile Include="Windows\EditEntry.xaml.cs">
       <DependentUpon>EditEntry.xaml</DependentUpon>
@@ -103,6 +104,9 @@
     </Compile>
     <Compile Include="Data\Entry.cs" />
     <Compile Include="Data\Product.cs" />
+    <Compile Include="Windows\EditUser.xaml.cs">
+      <DependentUpon>EditUser.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\RecapOfWeek.xaml.cs">
       <DependentUpon>RecapOfWeek.xaml</DependentUpon>
     </Compile>
@@ -110,6 +114,9 @@
       <DependentUpon>ToBankWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\Week.cs" />
+    <Compile Include="Windows\UserAdministration.xaml.cs">
+      <DependentUpon>UserAdministration.xaml</DependentUpon>
+    </Compile>
     <Page Include="Windows\Buchhaltung.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -119,6 +126,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\EditInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\EditUser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -151,6 +162,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ToBankWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\UserAdministration.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

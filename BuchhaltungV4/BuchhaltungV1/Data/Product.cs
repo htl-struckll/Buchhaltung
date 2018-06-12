@@ -10,11 +10,27 @@ namespace BuchhaltungV4
 
         public string Name { get; set; }
 
-        public double Price { get; set; } //todo Abfgragen
+        private double _price;
+        public double Price
+        {
+            get => _price;
+            set { if(value>0 && value < int.MaxValue) _price = value; }
+        }
 
-        public int Tax { get; set; }
+        private int _tax;
+        public int Tax
+        {
+            get => _tax;
+            set { if(value > 0 && value < 100) _tax = value; }
+        }
 
-        public double Amount { get; set; }
+        private double _amount;
+
+        public double Amount
+        {
+            get => _amount;
+            set { if(value > 0 && value < int.MaxValue) _amount = value; }
+        }
 
         public string KindOfAmount { get; set; }
 

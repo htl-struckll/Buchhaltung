@@ -8,14 +8,16 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using BuchhaltungV1.Windows;
 using MessageBox = System.Windows.MessageBox;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using Rectangle = System.Windows.Shapes.Rectangle; //To assign the Rectangle to the correct Library (Two diffrent)
 
 /*
- * Getter and Setter überarbeiten (Wenn Produkte editiert werden)
- * Überall RegularExpression für Zahlen hinzufügen
+ * overall implementation of sql
  * (Add/change/delete) users
+ * cant generate a new week if user is only user
+ * bearbeiten und löschen auf rechtsclick umwandeln
  */
 namespace BuchhaltungV4
 {
@@ -27,13 +29,13 @@ namespace BuchhaltungV4
     public partial class Buchhaltung
     {
         #region Var´s
-
         public static List<Product> Products = new List<Product>(); //list of all products
         public static Week CurrWeek; //the current week gets saved
         public static DayOfTheWeek CurrDay; //the current day for adding products
         public static List<DataBoxForGrid> Db = new List<DataBoxForGrid>(); //For editing to have references
         public static bool CloseWindow; //to close window
-
+        public static bool IsAdmin; //to see if user is a admin
+        public const string ConnectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=Buchhaltung;SslMode=none"; //connection string for mysql
         #endregion
 
         #region Ctor´s
@@ -46,48 +48,56 @@ namespace BuchhaltungV4
         /// <param name="name"></param>
         /// <param name="exTime"></param>
         /// <param name="lastCashDesk"></param>
-        public Buchhaltung(string weekNr, string name, DateTime exTime, double lastCashDesk)
+        /// <param name="isAdmin"></param>
+        public Buchhaltung(string weekNr, string name, DateTime exTime, double lastCashDesk, int isAdmin)
         {
             InitializeComponent();
 
+            IsAdmin = Convert.ToBoolean(isAdmin);
             LoadProducts();
-
             CurrWeek = new Week(weekNr, exTime, name, lastCashDesk); //Selects the current week
-
             GenerateDaysOfThWeekAndAddToWeek();
-
             SaveEntrys();
-
             DayOutput.Text = "Montag";
-
             FillWeekInfo();
+
+            if (IsAdmin)
+                ShowAdminFeatures();
         }
 
         /// <summary>
         /// Constructor if week does exist
         /// </summary>
         /// <param name="weekNr"></param>
-        public Buchhaltung(string weekNr)
+        /// <param name="isAdmin"></param>
+        public Buchhaltung(string weekNr, int isAdmin)
         {
             InitializeComponent();
+
+            IsAdmin = Convert.ToBoolean(isAdmin);
             LoadProducts();
-
             CurrWeek = new Week(weekNr); //Selects the current week
-
             GenerateDaysOfThWeekAndAddToWeek();
-
             LoadWeek(weekNr); //Needs to be loaded after Products 
-
             ReCalcAndUpdateInfoLine();
-
             DayOutput.Text = "Montag";
-
             FillWeekInfo();
+
+            if (IsAdmin)
+                ShowAdminFeatures();
         }
 
         #endregion
 
         #region FillData
+
+        /// <summary>
+        /// Shows all the admin features
+        /// </summary>
+        private void ShowAdminFeatures()
+        {
+            AdminUserGrid.Opacity = 100;
+        }
 
         /// <summary>
         /// Fills Info Box with standart information
@@ -203,6 +213,42 @@ namespace BuchhaltungV4
         #endregion
 
         #region CallWindows
+        /// <summary>
+        /// Logs you out
+        /// </summary>
+        private void Logout()
+        {
+            MainWindow mw = new MainWindow();
+            mw.Show();
+            Close();
+        }
+
+        /// <summary>
+        /// shows the user window
+        /// </summary>
+        private void ShowAllUsers()
+        {
+            UserWindow uw = new UserWindow();
+            uw.Show();
+        }
+
+        /// <summary>
+        /// Calls window to change the week
+        /// </summary>
+        private void ChangeWeek()
+        {
+            MainWindow mw = new MainWindow();
+            mw.Show();
+            mw.SetLoggedIn();
+            mw.IsAdmin = Convert.ToInt32(IsAdmin);
+
+            mw.Closed += (x, y) =>
+            {
+                if (CloseWindow)
+                    Close();
+                CloseWindow = true;
+            };
+        }
 
         /// <summary>
         /// Calls the add new product window
@@ -253,6 +299,13 @@ namespace BuchhaltungV4
         #region Events
 
         /// <summary>
+        /// Expands the user
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MouseDownExpandUserSettings(object sender, MouseButtonEventArgs e) => UserComboBox.IsDropDownOpen = true;
+
+        /// <summary>
         /// Expands Week
         /// </summary>
         /// <param name="sender"></param>
@@ -296,6 +349,20 @@ namespace BuchhaltungV4
         /// <param name="e"></param>
         private void MouseDownExpandDaysInWeek(object sender, MouseButtonEventArgs e) =>
             DropDownWeek.IsDropDownOpen = true;
+
+        /// <summary>
+        /// Shows all users event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ShowAllUsers_Click(object sender, MouseButtonEventArgs e) => ShowAllUsers();
+
+        /// <summary>
+        /// Logs you out event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Logout_Click(object sender, MouseButtonEventArgs e) => Logout();
 
         /// <summary>
         /// Shows the Help (How this programm is supposed to work)
@@ -342,7 +409,7 @@ namespace BuchhaltungV4
         /// <summary>
         /// Minimizes Programm
         /// </summary>
-        private void MinimizeProgramm_CLICK(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+        private void MinimizeProgramm_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 
         /// <summary>
         /// Calls function to List all Products
@@ -366,19 +433,8 @@ namespace BuchhaltungV4
         /// <summary>
         /// Opens a window to pick another week
         /// </summary>
-        private void ChangeWeek_Click(object sender, MouseButtonEventArgs e)
-        {
-            MainWindow mw = new MainWindow();
-            mw.Show();
-
-            mw.Closed += (x, y) =>
-            {
-                if (CloseWindow)
-                    Close();
-                CloseWindow = true;
-            };
-        }
-
+        private void ChangeWeek_Click(object sender, MouseButtonEventArgs e) => ChangeWeek();
+   
         /// <summary>
         /// Calls the function to add a new entry
         /// </summary>
@@ -504,13 +560,6 @@ namespace BuchhaltungV4
         /// <param name="e"></param>
         private void MouseDownExpandInfo(object sender, MouseButtonEventArgs e) => InfoComboBox.IsDropDownOpen = true;
 
-        /// <summary>
-        /// Expands Settings drop down
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MouseDownExpandSettings(object sender, MouseButtonEventArgs e) =>
-            SettingsComboBox.IsDropDownOpen = true;
         #endregion
 
         #region Saves
@@ -796,7 +845,7 @@ namespace BuchhaltungV4
 
         #endregion
 
-        #region SQL
+        #region SQL //todo
         //todo
         #endregion
 
