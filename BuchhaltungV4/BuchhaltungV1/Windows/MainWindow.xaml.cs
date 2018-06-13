@@ -16,7 +16,7 @@ namespace BuchhaltungV4
     public partial class MainWindow
     {
         #region var
-
+        public string Username = "";
         public int IsAdmin = 1;
         private const string ConnectionString = Buchhaltung.ConnectionString;
         private static readonly MySqlConnection Connection = new MySqlConnection(ConnectionString);
@@ -308,7 +308,7 @@ namespace BuchhaltungV4
                 {
                     if (File.Exists(@"Data\" + WeekNrTextBox.Text + @".week")) //Week does exist
                     {
-                        Buchhaltung b = new Buchhaltung(WeekNrTextBox.Text, IsAdmin);
+                        Buchhaltung b = new Buchhaltung(WeekNrTextBox.Text,Username, IsAdmin);
                         b.Show();
                     }
                     else
@@ -328,7 +328,7 @@ namespace BuchhaltungV4
                         if (oldCashDeskStr.Contains("€"))
                             oldCashDeskStr = oldCashDeskStr.Replace('€', ' ').Trim();
                         Buchhaltung b = new Buchhaltung(WeekNrTextBox.Text, NameInput.Text,
-                            Convert.ToDateTime(DateTextBox.Text), Convert.ToDouble(oldCashDeskStr),IsAdmin);
+                            Convert.ToDateTime(DateTextBox.Text), Convert.ToDouble(oldCashDeskStr),Username,IsAdmin);
                         b.Show();
                     }
 
@@ -354,6 +354,7 @@ namespace BuchhaltungV4
                 if (CheckLoginInfo(UsernameInput.Text, PasswordInput.Password.ToCharArray())) { 
                     SetLoggedIn();
                     IsAdmin = GetIsAdmin(UsernameInput.Text);
+                    Username = UsernameInput.Text;
 
                     if(IsAdmin.Equals(2))
                         Buchhaltung.Log("Es ist ein error bei der Admin authentifizierung aufgetreten! Sie sind jetzt ein User.");

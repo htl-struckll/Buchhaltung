@@ -15,9 +15,6 @@ using Rectangle = System.Windows.Shapes.Rectangle; //To assign the Rectangle to 
 
 /*
  * overall implementation of sql
- * (Add/change/delete) users
- * cant generate a new week if user is only user
- * bearbeiten und löschen auf rechtsclick umwandeln
  */
 namespace BuchhaltungV4
 {
@@ -36,6 +33,7 @@ namespace BuchhaltungV4
         public static bool CloseWindow; //to close window
         public static bool IsAdmin; //to see if user is a admin
         public const string ConnectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=Buchhaltung;SslMode=none"; //connection string for mysql
+        public static string Username;
         #endregion
 
         #region Ctor´s
@@ -49,9 +47,10 @@ namespace BuchhaltungV4
         /// <param name="exTime"></param>
         /// <param name="lastCashDesk"></param>
         /// <param name="isAdmin"></param>
-        public Buchhaltung(string weekNr, string name, DateTime exTime, double lastCashDesk, int isAdmin)
+        public Buchhaltung(string weekNr, string name, DateTime exTime, double lastCashDesk,string username, int isAdmin)
         {
             InitializeComponent();
+            Username = username;
 
             IsAdmin = Convert.ToBoolean(isAdmin);
             LoadProducts();
@@ -70,9 +69,10 @@ namespace BuchhaltungV4
         /// </summary>
         /// <param name="weekNr"></param>
         /// <param name="isAdmin"></param>
-        public Buchhaltung(string weekNr, int isAdmin)
+        public Buchhaltung(string weekNr,string username, int isAdmin)
         {
             InitializeComponent();
+            Username = username;
 
             IsAdmin = Convert.ToBoolean(isAdmin);
             LoadProducts();
@@ -240,7 +240,8 @@ namespace BuchhaltungV4
             MainWindow mw = new MainWindow();
             mw.Show();
             mw.SetLoggedIn();
-            mw.IsAdmin = Convert.ToInt32(IsAdmin);
+            mw.
+                IsAdmin = Convert.ToInt32(IsAdmin);
 
             mw.Closed += (x, y) =>
             {
@@ -364,6 +365,14 @@ namespace BuchhaltungV4
         /// <param name="e"></param>
         private void Logout_Click(object sender, MouseButtonEventArgs e) => Logout();
 
+        /// <summary>
+        /// Shows as which user you are logged on
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LoggedOn_MouseDown(object sender, MouseButtonEventArgs e) =>
+            Log("Du bist als '" + Username + "' angemeldet");
+        
         /// <summary>
         /// Shows the Help (How this programm is supposed to work)
         /// </summary>

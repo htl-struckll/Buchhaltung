@@ -95,6 +95,12 @@
                 <ComboBox.Resources>
                     <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="DarkGray" />
                 </ComboBox.Resources>
+                <TextBlock TextAlignment="Center" Height="22" Width="109" MouseDown="LoggedOn_MouseDown" FontSize="16"
+                           VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1.2,0.2,0.2,0.2">
+                    Angemeldet
+                </TextBlock>
+
+                <Rectangle IsHitTestVisible="False" Height="2" Width="113" Fill="Black" />
 
                 <TextBlock TextAlignment="Center" Height="22" Width="109" MouseDown="Help_Click" FontSize="16"
                                VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1.2,0.2,0.2,0.2">

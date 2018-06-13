@@ -124,8 +124,8 @@ namespace BuchhaltungV1.Windows
                 CreateConnection();
                 const string query = "SELECT COUNT(username)  FROM user WHERE username LIKE @name";
 
+                CreateConnection();
                 _connection.Open();
-
                 MySqlCommand cmd = new MySqlCommand(query, _connection);
 
                 cmd.Parameters.AddWithValue("@name", newName);
