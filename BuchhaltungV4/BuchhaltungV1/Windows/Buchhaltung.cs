@@ -14,7 +14,6 @@ using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using Rectangle = System.Windows.Shapes.Rectangle; //To assign the Rectangle to the correct Library (Two diffrent)
 
 /*
- * overall implementation of sql
  */
 namespace BuchhaltungV4
 {

@@ -15,10 +15,10 @@
         <DataGrid   x:Name="UserTable" FontSize="14" Margin="0,54,-0.2,0.2" Loaded="User_TableLoaded" AutoGenerateColumns="True">
             <DataGrid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Edit" Click="Edit_Click"/>
-                    <MenuItem Header="New" Click="New_Click"/>
+                    <MenuItem Header="Bearbeiten" Click="Edit_Click"/>
+                    <MenuItem Header="Neu" Click="New_Click"/>
                     <Separator />
-                    <MenuItem Header="Delete" Click="Delete_Click"></MenuItem>
+                    <MenuItem Header="Löschen" Click="Delete_Click"></MenuItem>
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
