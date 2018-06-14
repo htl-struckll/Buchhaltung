@@ -1,1 +1,1 @@
-id;name;Price;tax;amount;kindOfAmount
+id;name;Price;tax;amount;kindOfAmount;group
