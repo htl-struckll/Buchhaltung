@@ -3,7 +3,8 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using MySql.Data.MySqlClient;
-
+using System.Threading;
+//todo write update if row was edited
 namespace BuchhaltungV4
 {
     /// <summary>
@@ -33,13 +34,6 @@ namespace BuchhaltungV4
         /// Loads data into WpfWindow
         /// </summary>
         public void LoadDataInWpfWindow() => ProductTable.ItemsSource = Buchhaltung.Products;
-
-        /// <summary>
-        /// Closes Programm
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Button_Click(object sender, RoutedEventArgs e) => Close();
 
         /// <summary>
         /// Seaarches the input
@@ -100,6 +94,25 @@ namespace BuchhaltungV4
         }
 
         /// <summary>
+        /// Deletes the product
+        /// </summary>
+        /// <param name="p"></param>
+        private void Delete(Product p)
+        {
+            //if product is null it returns
+            if (p.Equals(null)) return;
+
+            if (MessageBox.Show("'" + p.Name + "' löschen?", "Sicher löschen", MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                Buchhaltung.Products.Remove(p);
+                RemoveProductSQL(p.Id);
+                ProductTable.Items.Refresh();
+            }
+        }
+
+        #region Event´s
+        /// <summary>
         /// Opens the new Product window
         /// </summary>
         /// <param name="sender"></param>
@@ -124,22 +137,12 @@ namespace BuchhaltungV4
         private void Delete_Click(object sender, RoutedEventArgs e) => Delete(ProductTable.SelectedItem is Product ut ? ut : null);
 
         /// <summary>
-        /// Deletes the product
+        /// Closes Programm
         /// </summary>
-        /// <param name="p"></param>
-        private void Delete(Product p)
-        {
-            //if product is null it returns
-            if (p.Equals(null)) return;
-
-            if (MessageBox.Show("'" + p.Name + "' löschen?", "Sicher löschen", MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning) == MessageBoxResult.Yes)
-            {
-                Buchhaltung.Products.Remove(p);
-                RemoveProductSQL(p.Id);
-                ProductTable.Items.Refresh();
-            }
-        }
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click(object sender, RoutedEventArgs e) => Close();
+        #endregion
 
         #region sql
 
@@ -169,6 +172,36 @@ namespace BuchhaltungV4
         }
 
         /// <summary>
+        /// Updates the product
+        /// </summary>
+        private void UpdateCell()
+        {
+            int idx = _cellRow;//todo
+            Thread.Sleep(100);
+            Product p = ProductTable[idx] as Product;
+            
+            try
+            {
+                string query = "UPDATE `Product` SET `Id`=[value-1],`Name`=[value-2],`Price`=[value-3],`Tax`=[value-4],`Amount`=[value-5],`KindOfAmount`=[value-6],`GroupOfProduct`=[value-7] WHERE id LIKE " + id;
+                CreateConnection();
+
+                MySqlCommand commandDatabase = new MySqlCommand(query, _connection) { CommandTimeout = 60 };
+                _connection.Open();
+
+                commandDatabase.ExecuteNonQuery();
+
+                CloseConnection();
+            }
+            catch (Exception ex)
+            {
+                Buchhaltung.SaveErrorMsg(ex);
+                Buchhaltung.Log(ex.Message);
+            }
+        }
+
+
+
+        /// <summary>
         /// Creates a new Connection
         /// </summary>
         protected static void CreateConnection() => _connection = new MySqlConnection(Buchhaltung.ConnectionString);
@@ -178,6 +211,16 @@ namespace BuchhaltungV4
         /// </summary>
         protected static void CloseConnection() => _connection.Close();
         #endregion
+
+        private int _cellRow = 0;
+        private void ProductTable_OnCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+           //Product p = sender as Product;
+            Buchhaltung.Log(e.Row.GetIndex().ToString());
+            _cellRow = e.Row.GetIndex();
+            Thread th = new Thread(UpdateCell);
+            th.Start();
+        }
 
     }
 }

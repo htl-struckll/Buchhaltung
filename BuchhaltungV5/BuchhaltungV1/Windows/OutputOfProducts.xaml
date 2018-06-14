@@ -7,7 +7,7 @@
         Title="Liste aller Produkte" Height="526.016" Width="455.251"
         ResizeMode="NoResize">
     <Grid Margin="0,0,0,-1">
-        <DataGrid ItemsSource="{Binding Path=ProductBinding}" Margin="0,0,0,78" x:Name="ProductTable"
+        <DataGrid ItemsSource="{Binding Path=ProductBinding}" CellEditEnding="ProductTable_OnCellEditEnding" Margin="0,0,0,78" x:Name="ProductTable"
                   CanUserAddRows="True" CanUserSortColumns="True" AutoGenerateColumns="True" Loaded="ProductGridLoaded">
             <DataGrid.ContextMenu>
                 <ContextMenu>
