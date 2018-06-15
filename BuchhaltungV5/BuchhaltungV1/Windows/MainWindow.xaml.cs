@@ -154,7 +154,7 @@ namespace BuchhaltungV4
         {
             try
             {
-                string query = "SELECT password FROM user WHERE @name LIKE username";
+                string query = "SELECT password FROM user WHERE username LIKE @name";
                 MySqlCommand cmd = new MySqlCommand(query, Connection) {CommandTimeout = 60};
 
                 Connect();
@@ -209,7 +209,7 @@ namespace BuchhaltungV4
         }
         #endregion
 
-        #region Database
+        #region sql
 
         /// <summary>
         /// Opens the sql connection
@@ -223,7 +223,7 @@ namespace BuchhaltungV4
 
         #endregion
 
-        #region Misc
+        #region misc
         /// <summary>
         /// Gets if the user is an admin
         /// </summary>

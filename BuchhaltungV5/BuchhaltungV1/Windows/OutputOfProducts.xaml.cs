@@ -176,19 +176,26 @@ namespace BuchhaltungV4
         /// </summary>
         private void UpdateCell()
         {
-            int idx = _cellRow;//todo
-            Thread.Sleep(100);
-            Product p = ProductTable[idx] as Product;
+          
+            Product p = _itemFromProductTable;
             
             try
             {
-                string query = "UPDATE `Product` SET `Id`=[value-1],`Name`=[value-2],`Price`=[value-3],`Tax`=[value-4],`Amount`=[value-5],`KindOfAmount`=[value-6],`GroupOfProduct`=[value-7] WHERE id LIKE " + id;
+                string query = "UPDATE `Product` SET `Name`=@name,`Price`=@price,`Tax`=@tax,`Amount`=@amount,`KindOfAmount`=@kindofamount,`GroupOfProduct`=@groupofproduct WHERE id LIKE " + p.Id;
                 CreateConnection();
 
-                MySqlCommand commandDatabase = new MySqlCommand(query, _connection) { CommandTimeout = 60 };
+                MySqlCommand cmd = new MySqlCommand(query, _connection) { CommandTimeout = 60 };
                 _connection.Open();
 
-                commandDatabase.ExecuteNonQuery();
+                cmd.Parameters.AddWithValue("@name", p.Name);
+                cmd.Parameters.AddWithValue("@price", p.Price);
+                cmd.Parameters.AddWithValue("@tax", p.Tax);
+                cmd.Parameters.AddWithValue("@amount", p.Amount);
+                cmd.Parameters.AddWithValue("@kindofamount", p.KindOfAmount);
+                cmd.Parameters.AddWithValue("@groupofproduct", p.Group);
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
 
                 CloseConnection();
             }
@@ -212,14 +219,17 @@ namespace BuchhaltungV4
         protected static void CloseConnection() => _connection.Close();
         #endregion
 
-        private int _cellRow = 0;
+        private Product _itemFromProductTable = null;
         private void ProductTable_OnCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-           //Product p = sender as Product;
-            Buchhaltung.Log(e.Row.GetIndex().ToString());
-            _cellRow = e.Row.GetIndex();
-            Thread th = new Thread(UpdateCell);
-            th.Start();
+            if (!(e.Row.Item is Product))
+                Buchhaltung.Log("ERROR: With getting item");
+            else
+            {
+                _itemFromProductTable = (Product)e.Row.Item;
+                Thread thread = new Thread(UpdateCell);
+                thread.Start();
+            }
         }
 
     }
