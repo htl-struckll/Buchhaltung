@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using BuchhaltungV1.Enumerations;
 using BuchhaltungV1.Windows;
 using MySql.Data.MySqlClient;
 using MessageBox = System.Windows.MessageBox;
@@ -48,6 +49,7 @@ namespace BuchhaltungV4
         /// <param name="name"></param>
         /// <param name="exTime"></param>
         /// <param name="lastCashDesk"></param>
+        /// <param name="username"></param>
         /// <param name="isAdmin"></param>
         public Buchhaltung(string weekNr, string name, DateTime exTime, double lastCashDesk,string username, int isAdmin)
         {
@@ -58,7 +60,7 @@ namespace BuchhaltungV4
             LoadProducts();
             CurrWeek = new Week(weekNr, exTime, name, lastCashDesk); //Selects the current week
             GenerateDaysOfThWeekAndAddToWeek();
-            SaveEntrys();
+            SaveEntrys(); //When generated a new week the file need to be generated
             DayOutput.Text = "Montag";
             FillWeekInfo();
 
@@ -70,6 +72,7 @@ namespace BuchhaltungV4
         /// Constructor if week does exist
         /// </summary>
         /// <param name="weekNr"></param>
+        /// <param name="username"></param>
         /// <param name="isAdmin"></param>
         public Buchhaltung(string weekNr,string username, int isAdmin)
         {
@@ -181,8 +184,8 @@ namespace BuchhaltungV4
                 }
             }
 
-            double tenPer = (tenPriceAll / 100) * 10;
-            double twentPer = (twenPriceAll / 100) * 20;
+            double tenPer = Math.Round(((tenPriceAll / 110) * 10),2);
+            double twentPer = Math.Round(((twenPriceAll / 120) * 20),2);
 
             DailyIincomeOutput.Text =
                 "Heutige Einnahmen: " + Convert.ToString(priceAll, CultureInfo.InvariantCulture) +
@@ -265,12 +268,28 @@ namespace BuchhaltungV4
         /// <summary>
         /// opens the window to show all products
         /// </summary>
-        private void ListAllProducts()
+        private void ShowAllProducts()
         {
             OutputOfProducts o = new OutputOfProducts();
+            LoadProducts();
             o.Show();
-        }
 
+            o.Closed += (x, y) =>
+            {
+                foreach (Day day in CurrWeek.DaysInWeek)
+                {
+                    if (day.Name.Equals(CurrDay))
+                    {
+                        day.Entrys.Clear();
+                        break;
+                    }
+                }
+                LoadProducts();
+                LoadWeek(CurrWeek.WeekNr);
+                ReCalcAndUpdateInfoLine();
+            };
+        }
+        
         /// <summary>
         /// Opens the window to add new entrys
         /// </summary>
@@ -422,7 +441,7 @@ namespace BuchhaltungV4
         /// <summary>
         /// Calls function to List all Products
         /// </summary>
-        private void ListAllProducts_Click(object sender, MouseButtonEventArgs e) => ListAllProducts();
+        private void ListAllProducts_Click(object sender, MouseButtonEventArgs e) => ShowAllProducts();
 
         /// <summary>
         /// Calls function to add a new Product
@@ -730,9 +749,9 @@ namespace BuchhaltungV4
 
                                 break;
                         }
+                        //calls a functione to splitup a line and add it to the correct day
+                        SplitAndAddLoadedEntry(line); 
 
-                        SplitAndAddLoadedEntry(
-                            line); //calls a functione to splitup a line and add it to the correct day
                         line = reader.ReadLine();
                     }
                 }
@@ -780,9 +799,12 @@ namespace BuchhaltungV4
         /// a Log function
         /// </summary>
         /// <param name="msg"></param>
-        public static void Log(string msg)
+        /// <param name="caption"></param>
+        /// <param name="msgInfo"></param>
+        /// <param name="msgBtn"></param>
+        public static void Log(string msg, string caption = "Info", MessageBoxImage msgInfo = MessageBoxImage.Information, MessageBoxButton msgBtn = MessageBoxButton.OK)
         {
-            MessageBox.Show("[ " + DateTime.Now + " ] " + msg);
+            MessageBox.Show("[ " + DateTime.Now + " ] " + msg, caption, msgBtn, msgInfo);
         }
 
         /// <summary>
@@ -799,13 +821,14 @@ namespace BuchhaltungV4
 
     #endregion
 
-    #region SQL 
+        #region SQL 
 
         /// <summary>
         /// loads products into programm
         /// </summary>
         private void LoadProducts()
         {
+            Products = new List<Product>();
             try
             {
                 string query = "SELECT * FROM product";
@@ -977,9 +1000,6 @@ namespace BuchhaltungV4
 
             return animation;
         }
-
-
-
         #endregion
     }
 }

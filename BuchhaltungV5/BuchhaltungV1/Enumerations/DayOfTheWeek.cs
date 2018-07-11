@@ -1,4 +1,4 @@
-﻿namespace BuchhaltungV4
+﻿namespace BuchhaltungV1.Enumerations
 {
     public enum DayOfTheWeek
     {

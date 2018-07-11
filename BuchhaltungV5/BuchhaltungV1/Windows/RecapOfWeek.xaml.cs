@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq.Expressions;
 using System.Windows.Controls;
 
 namespace BuchhaltungV4
@@ -32,8 +33,8 @@ namespace BuchhaltungV4
             PlaceKeeperOutput.Text = "Platzwart: 230€";
             CantinaOutput.Text = "Kantine: " + Convert.ToString(240 + GetSales() * 0.10, CultureInfo.InvariantCulture) +
                                  "€";
-            TwenTaxOutput.Text = Convert.ToString(GetSales() * 0.20, CultureInfo.InvariantCulture) + "€";
-            TenTaxOutput.Text = Convert.ToString(GetSales() * 0.10, CultureInfo.InvariantCulture) + "€";
+            TwenTaxOutput.Text = Convert.ToString(Math.Round(GetTwentyPercentValue(), 2), CultureInfo.InvariantCulture) + "€";
+            TenTaxOutput.Text = Convert.ToString(Math.Round(GetTenPercentValue(),2), CultureInfo.InvariantCulture) + "€";
             LastCashOutOutput.Text =
                 Convert.ToString(Buchhaltung.CurrWeek.LastChashDesk, CultureInfo.InvariantCulture) + "€";
             SummeOutput.Text = Convert.ToString(GetSales(), CultureInfo.InvariantCulture) + "€";
@@ -43,6 +44,61 @@ namespace BuchhaltungV4
                                       GetSales() - GetSales() * 0.10 - 230 - 240 - GetTotalBank() +
                                       Buchhaltung.CurrWeek.LastChashDesk, CultureInfo.InvariantCulture) + "€";
         }
+
+        /// <summary>
+        /// Gets the sales value of all 20% tax items
+        /// </summary>
+        /// <returns>the tax</returns>
+        private double GetTwentyPercentValue()
+        {
+            double sales = 0;
+            try
+            {
+                foreach (Day d in Buchhaltung.CurrWeek.DaysInWeek)
+                {
+                    foreach (Entry e in d.Entrys)
+                    {
+                        if(e.Tax.Equals(20))
+                            sales += e.Price;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Buchhaltung.SaveErrorMsg(ex);
+                Buchhaltung.Log(ex.Message);
+            }
+
+            return sales / 120 * 20;
+        }
+
+        /// <summary>
+        /// Gets the sales value of all 10% tax items
+        /// </summary>
+        /// <returns>the tax</returns>
+        private double GetTenPercentValue()
+        {
+            double sales = 0;
+            try
+            {
+                foreach (Day d in Buchhaltung.CurrWeek.DaysInWeek)
+                {
+                    foreach (Entry e in d.Entrys)
+                    {
+                        if (e.Tax.Equals(10))
+                            sales += e.Price;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Buchhaltung.SaveErrorMsg(ex);
+                Buchhaltung.Log(ex.Message);
+            }
+
+            return sales/110 * 10;
+        }
+
 
         /// <summary>
         /// Gets total sales

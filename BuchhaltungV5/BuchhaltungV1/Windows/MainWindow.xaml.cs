@@ -306,8 +306,8 @@ namespace BuchhaltungV4
             {
                 if (Convert.ToInt32(WeekNrTextBox.Text) > 0 && Convert.ToInt32(WeekNrTextBox.Text) < 56) //Week in year
                 {
-                    if (File.Exists(@"Data\" + WeekNrTextBox.Text + @".week")) //Week does exist
-                    {
+                    if (File.Exists(@"Data\" + WeekNrTextBox.Text + @".week")) //Checks if the week already existst
+                    {//todo You see if the week exists When it exists Count(weekNr) do this / if not do the other thing and handle that shit in the Buchhaltung.cs
                         Buchhaltung b = new Buchhaltung(WeekNrTextBox.Text,Username, IsAdmin);
                         b.Show();
                     }
@@ -331,7 +331,6 @@ namespace BuchhaltungV4
                             Convert.ToDateTime(DateTextBox.Text), Convert.ToDouble(oldCashDeskStr),Username,IsAdmin);
                         b.Show();
                     }
-
                     Close();
                 }
                 else

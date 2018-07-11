@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using MySql.Data.MySqlClient;
 using System.Threading;
-//todo write update if row was edited
+
 namespace BuchhaltungV4
 {
     /// <summary>
@@ -126,6 +126,14 @@ namespace BuchhaltungV4
             {
                 ProductTable.ItemsSource = null;
                 LoadDataInWpfWindow();
+
+                ProductTable.Columns[0].IsReadOnly = true;
+
+                ProductTable.Columns[2].Header = "Preis (€)";
+                ProductTable.Columns[3].Header = "Steuer (%)";
+                ProductTable.Columns[4].Header = "Menge";
+                ProductTable.Columns[5].Header = "Art der Menge";
+                ProductTable.Columns[6].Header = "Kat.";
             };
         }
 
@@ -176,9 +184,9 @@ namespace BuchhaltungV4
         /// </summary>
         private void UpdateCell()
         {
-          
             Product p = _itemFromProductTable;
-            
+            Thread.Sleep(100);
+
             try
             {
                 string query = "UPDATE `Product` SET `Name`=@name,`Price`=@price,`Tax`=@tax,`Amount`=@amount,`KindOfAmount`=@kindofamount,`GroupOfProduct`=@groupofproduct WHERE id LIKE " + p.Id;
@@ -205,8 +213,6 @@ namespace BuchhaltungV4
                 Buchhaltung.Log(ex.Message);
             }
         }
-
-
 
         /// <summary>
         /// Creates a new Connection

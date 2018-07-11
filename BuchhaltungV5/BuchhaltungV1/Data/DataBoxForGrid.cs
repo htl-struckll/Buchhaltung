@@ -1,4 +1,6 @@
-﻿namespace BuchhaltungV4
+﻿using BuchhaltungV1.Enumerations;
+
+namespace BuchhaltungV4
 {
     public class DataBoxForGrid
     {

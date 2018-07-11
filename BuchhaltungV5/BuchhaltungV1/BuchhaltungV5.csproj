@@ -93,7 +93,7 @@
     <Compile Include="Data\DataBoxForGrid.cs" />
     <Compile Include="Data\DataForWeekRecapTable.cs" />
     <Compile Include="Data\Day.cs" />
-    <Compile Include="Data\DayOfTheWeek.cs" />
+    <Compile Include="Enumerations\DayOfTheWeek.cs" />
     <Compile Include="Data\User.cs" />
     <Compile Include="Windows\Buchhaltung.cs" />
     <Compile Include="Windows\EditEntry.xaml.cs">

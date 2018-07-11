@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BuchhaltungV1.Enumerations;
 
 namespace BuchhaltungV4
 {
