@@ -1,10 +1,17 @@
 ﻿using System;
+using BuchhaltungV1.Enumerations;
 
 namespace BuchhaltungV4
 {
     public class Entry : IComparable<Entry>
     {
         #region Vars
+
+        public int Id { get; set; }
+
+        public int WeekId { get; set; }
+
+        public DayOfTheWeek DayOfEntry { get; set; }
 
         public Product ProductForEntry { get; set; }
 
@@ -17,14 +24,18 @@ namespace BuchhaltungV4
         public double Tax { get; set; }
 
         #endregion
+        //test
 
-        public Entry(Product p, int amount, int amountOnTheHouse, double price)
+        public Entry(int id, int weekId, int dayId, int productId, int amount, int amountOnTheHouse,double price)
         {
-            ProductForEntry = p;
+            Id = id;
+            WeekId = weekId;
+            DayOfEntry = (DayOfTheWeek) dayId; //todo check if this works
+            ProductForEntry = GetProduct(productId);
             Amount = amount;
             AmountOnTheHouse = amountOnTheHouse;
             Price = price;
-            Tax = GetTax();
+            Tax = ProductForEntry.Tax;
         }
 
         #region function´s
@@ -33,15 +44,15 @@ namespace BuchhaltungV4
         /// gets the tax of the product
         /// </summary>
         /// <returns></returns>
-        private double GetTax()
+        private Product GetProduct(int pId)
         {
             foreach (Product p in Buchhaltung.Products)
             {
-                if (p.Id == ProductForEntry.Id)
-                    return p.Tax;
+                if (p.Id == pId)
+                    return p;
             }
 
-            return -1; //error
+            return null; //error
         }
 
         /// <summary>

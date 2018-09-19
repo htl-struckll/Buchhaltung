@@ -41,16 +41,15 @@ namespace BuchhaltungV4
 
         #region Ctor´s
 
-        /// <inheritdoc />
         /// <summary>
         /// Constructor if Week doesn´t exist
         /// </summary>
-        /// <param name="weekNr"></param>
-        /// <param name="name"></param>
-        /// <param name="exTime"></param>
-        /// <param name="lastCashDesk"></param>
-        /// <param name="username"></param>
-        /// <param name="isAdmin"></param>
+        /// <param name="weekNr">Week nr</param>
+        /// <param name="name">Name of creator</param>
+        /// <param name="exTime">exact time of week</param>
+        /// <param name="lastCashDesk">last cash desk</param>
+        /// <param name="username">Username of user</param>
+        /// <param name="isAdmin">Is the user admin</param>
         public Buchhaltung(string weekNr, string name, DateTime exTime, double lastCashDesk,string username, int isAdmin)
         {
             InitializeComponent();
@@ -71,9 +70,9 @@ namespace BuchhaltungV4
         /// <summary>
         /// Constructor if week does exist
         /// </summary>
-        /// <param name="weekNr"></param>
-        /// <param name="username"></param>
-        /// <param name="isAdmin"></param>
+        /// <param name="weekNr">Week nr</param>
+        /// <param name="username">Username</param>
+        /// <param name="isAdmin">Is the user admin</param>
         public Buchhaltung(string weekNr,string username, int isAdmin)
         {
             InitializeComponent();
@@ -83,7 +82,7 @@ namespace BuchhaltungV4
             LoadProducts();
             CurrWeek = new Week(weekNr); //Selects the current week
             GenerateDaysOfThWeekAndAddToWeek();
-            LoadWeek(weekNr); //Needs to be loaded after Products 
+            GenerateWeek(weekNr); //Needs to be loaded after Products todo
             ReCalcAndUpdateInfoLine();
             DayOutput.Text = "Montag";
             FillWeekInfo();
@@ -93,6 +92,55 @@ namespace BuchhaltungV4
         }
 
         #endregion
+
+        public void LoadWeek(string weekName)
+        {
+
+        }
+
+        /// <summary>
+        /// Loads the entrys of the database
+        /// </summary>
+        /// <param name="weekName">Week name</param>
+        /// <param name="dayId">Id of the day</param>
+        public void LoadEntry(string weekName, string dayId)
+        {
+            Products = new List<Product>();
+            try
+            {
+                string query = "SELECT * FROM entry WHERE 'WeekId' LIKE " + weekName + " AND 'DayId' LIKE " + dayId;
+                CreateConnection();
+
+                MySqlCommand commandDatabase = new MySqlCommand(query, _connection) { CommandTimeout = 60 };
+                _connection.Open();
+
+                MySqlDataReader reader = commandDatabase.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {  
+                        string id = reader.GetString(0);          
+                        string weekId = reader.GetString(1);
+                        //string dayId = reader.GetString(2); //todo check if works with given dayId
+                        string productForEntryId = reader.GetString(3);
+                        string amount = reader.GetString(4);
+                        string amountOnTheHouse = reader.GetString(5);
+                        string price = reader.GetString(6);
+                        
+                        CurrWeek.GetCurrentDayAndAddEntry(new Entry(Convert.ToInt32(id), Convert.ToInt32(weekId), Convert.ToInt32(dayId), Convert.ToInt32(productForEntryId), Convert.ToInt32(amount), Convert.ToInt32(amountOnTheHouse), Convert.ToDouble(price)));
+                    }
+                }
+
+                CloseConnection();
+            }
+            catch (Exception ex)
+            {
+                SaveErrorMsg(ex);
+                Log(ex.Message);
+            }
+        }
+
 
         #region FillData
 
@@ -285,7 +333,7 @@ namespace BuchhaltungV4
                     }
                 }
                 LoadProducts();
-                LoadWeek(CurrWeek.WeekNr);
+                GenerateWeek(CurrWeek.WeekNr);
                 ReCalcAndUpdateInfoLine();
             };
         }
@@ -547,7 +595,7 @@ namespace BuchhaltungV4
                 string nr = CurrWeek.WeekNr;
                 CurrWeek = new Week(nr);
                 GenerateDaysOfThWeekAndAddToWeek();
-                LoadWeek(nr);
+                GenerateWeek(nr);
                 FillEntryTable();
                 ReCalcAndUpdateInfoLine();
             };
@@ -695,14 +743,50 @@ namespace BuchhaltungV4
 
         #endregion
 
-        #region Loads and Splits
+        #region Loads and Splits  //todo
+        //todo
 
         /// <summary>
         /// Loads week File into programm
         /// </summary>
         /// <param name="weekName"></param>
-        public void LoadWeek(string weekName)
+        public void GenerateWeek(string weekName) //todo rewrite
         {
+            LoadWeek(weekName);
+
+            for (int dayId = 0; dayId < 7; dayId++)
+            {
+                switch (dayId)
+                {
+                    case 0:
+                        CurrDay = DayOfTheWeek.Monday;
+                        break;
+                    case 1:
+                        CurrDay = DayOfTheWeek.Tuesday;
+                        break;
+                    case 2:
+                        CurrDay = DayOfTheWeek.Wednesday;
+                        break;
+                    case 3:
+                        CurrDay = DayOfTheWeek.Thursday;
+                        break;
+                    case 4:
+                        CurrDay = DayOfTheWeek.Friday;
+                        break;
+                    case 5:
+                        CurrDay = DayOfTheWeek.Saturday;
+                        break;
+                    case 6:
+                        CurrDay = DayOfTheWeek.Sunday;
+                        break;
+                }
+
+                LoadEntry(weekName, dayId.ToString());
+            }
+
+          
+
+            /*
             try
             {
                 using (StreamReader reader = new StreamReader(@"Data\" + weekName + ".week"))
@@ -750,8 +834,9 @@ namespace BuchhaltungV4
                                 break;
                         }
                         //calls a functione to splitup a line and add it to the correct day
-                        SplitAndAddLoadedEntry(line); 
-
+                        //SplitAndAddLoadedEntry(line); 
+                        //todo
+                        //LoadEntrysSQL();
                         line = reader.ReadLine();
                     }
                 }
@@ -765,14 +850,14 @@ namespace BuchhaltungV4
             {
                 CurrDay = DayOfTheWeek.Monday; //sets the current day to Monday and checks it
                 Monday.IsChecked = true;
-            }
+            }*/
         }
 
         /// <summary>
         /// Split lines into better strings to use and adds them to the currDay
         /// </summary>
         /// <param name="line">line</param>
-        private void SplitAndAddLoadedEntry(string line)
+        private void SplitAndAddLoadedEntry(string line) //todo delete
         {
             if (line != null)
             {
@@ -782,9 +867,9 @@ namespace BuchhaltungV4
                 {
                     if (Convert.ToString(p.Id) == splittedLine[0])
                     {
-                        Entry e = new Entry(p, Convert.ToInt32(splittedLine[1]), Convert.ToInt32(splittedLine[2]),
-                            Convert.ToInt32(splittedLine[1]) * p.Price);
-                        CurrWeek.GetCurrentDayAndAddEntry(e);
+                        //Entry e = new Entry(p, Convert.ToInt32(splittedLine[1]), Convert.ToInt32(splittedLine[2]),
+                            //Convert.ToInt32(splittedLine[1]) * p.Price);
+                        //CurrWeek.GetCurrentDayAndAddEntry(e);
                         break;
                     }
                 }
