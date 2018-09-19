@@ -5,6 +5,8 @@ using System.Windows.Controls;
 using BuchhaltungV4;
 using MySql.Data.MySqlClient;
 
+
+//todo users do not refresh after editing
 namespace BuchhaltungV1.Windows
 {
     /// <summary>
@@ -34,7 +36,9 @@ namespace BuchhaltungV1.Windows
         /// </summary>
         private void FillTable()
         {
+            UserTable.ItemsSource = null;
             UserTable.ItemsSource = _users;
+            UserTable.Items.Refresh();
         }
 
 
@@ -118,28 +122,15 @@ namespace BuchhaltungV1.Windows
 
                 editUser.Closed += (x, y) =>
                 {
-                    _users = new List<User>();
-                    GetUsers();
-                    FillTable();
+                    Buchhaltung.Log("refresh");
+                    UserTable.Items.Refresh();
                 };
             }
         }
-        /// <summary>
-        /// Calls the new user window
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+
         private void New_Click(object sender, RoutedEventArgs e)
         {
-            NewUser nu = new NewUser(_users[_users.Count-1].Id+1);
-            nu.Show();
-
-            nu.Closed += (x, y) =>
-            {
-                _users = new List<User>();
-                GetUsers();
-                FillTable();
-            };
+            //todo
         }
 
         /// <summary>
@@ -152,12 +143,6 @@ namespace BuchhaltungV1.Windows
             if (UserTable.SelectedItem is User ut)
             {
                 string name = ut.Name;
-                //returns if selected name is you
-                if (name.Equals(Buchhaltung.Username))
-                {
-                    Buchhaltung.Log("Du kannst dich nicht selbst löschen");
-                    return;
-                }
 
                 if (MessageBox.Show("'" + name + "' löschen?", "Sicher löschen", MessageBoxButton.YesNo,
                         MessageBoxImage.Warning) == MessageBoxResult.Yes)
@@ -171,7 +156,6 @@ namespace BuchhaltungV1.Windows
         #endregion
 
         #region SQL
-
         /// <summary>
         /// Gets the usernames
         /// </summary>
@@ -182,9 +166,10 @@ namespace BuchhaltungV1.Windows
                 const string query = "SELECT id,username,isAdmin FROM user";
 
                 CreateConnection();
-                _connection.Open();
 
                 MySqlCommand commandDatabase = new MySqlCommand(query, _connection) { CommandTimeout = 60 };
+
+                _connection.Open();
 
                 MySqlDataReader reader = commandDatabase.ExecuteReader();
 
@@ -216,7 +201,7 @@ namespace BuchhaltungV1.Windows
         {
             try
             {
-                string query = "DELETE FROM user WHERE username = '" + name + "'";
+                string query = "DELETE FROM user WHERE name = '" + name + "'";
                 CreateConnection();
 
                 MySqlCommand commandDatabase = new MySqlCommand(query, _connection) { CommandTimeout = 60 };
@@ -246,4 +231,3 @@ namespace BuchhaltungV1.Windows
         #endregion
     }
 }
-
