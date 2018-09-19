@@ -57,7 +57,7 @@ namespace BuchhaltungV4
 
             IsAdmin = Convert.ToBoolean(isAdmin);
             LoadProducts();
-            CurrWeek = new Week(weekNr, exTime, name, lastCashDesk); //Selects the current week
+            CurrWeek = new Week(weekNr, exTime, name, lastCashDesk); //Selects the current week todo rewrite to sql
             GenerateDaysOfThWeekAndAddToWeek();
             SaveEntrys(); //When generated a new week the file need to be generated
             DayOutput.Text = "Montag";
@@ -80,9 +80,11 @@ namespace BuchhaltungV4
 
             IsAdmin = Convert.ToBoolean(isAdmin);
             LoadProducts();
-            CurrWeek = new Week(weekNr); //Selects the current week
-            GenerateDaysOfThWeekAndAddToWeek();
             GenerateWeek(weekNr); //Needs to be loaded after Products todo
+
+             //Selects the current week
+        
+
             ReCalcAndUpdateInfoLine();
             DayOutput.Text = "Montag";
             FillWeekInfo();
@@ -93,9 +95,37 @@ namespace BuchhaltungV4
 
         #endregion
 
-        public void LoadWeek(string weekName)
+        public void LoadWeek(string weekNr)//todo
         {
+            CurrWeek = new Week(weekNr);
+            try
+            {
+                string query = "SELECT * FROM week WHERE 'WeekId' LIKE " + weekNr;
+                CreateConnection();
 
+                MySqlCommand commandDatabase = new MySqlCommand(query, _connection) { CommandTimeout = 60 };
+                _connection.Open();
+
+                MySqlDataReader reader = commandDatabase.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        string id = reader.GetString(0);
+                   
+
+                        CurrWeek
+                    }
+                }
+
+                CloseConnection();
+            }
+            catch (Exception ex)
+            {
+                SaveErrorMsg(ex);
+                Log(ex.Message);
+            }
         }
 
         /// <summary>
@@ -105,7 +135,6 @@ namespace BuchhaltungV4
         /// <param name="dayId">Id of the day</param>
         public void LoadEntry(string weekName, string dayId)
         {
-            Products = new List<Product>();
             try
             {
                 string query = "SELECT * FROM entry WHERE 'WeekId' LIKE " + weekName + " AND 'DayId' LIKE " + dayId;
@@ -753,6 +782,7 @@ namespace BuchhaltungV4
         public void GenerateWeek(string weekName) //todo rewrite
         {
             LoadWeek(weekName);
+            GenerateDaysOfThWeekAndAddToWeek();
 
             for (int dayId = 0; dayId < 7; dayId++)
             {
@@ -789,7 +819,7 @@ namespace BuchhaltungV4
             /*
             try
             {
-                using (StreamReader reader = new StreamReader(@"Data\" + weekName + ".week"))
+                using (StreamReader reader = new StreamReader(@"Data\" + weekNr + ".week"))
                 {
                     string line = reader.ReadLine(), headLine = null;
 

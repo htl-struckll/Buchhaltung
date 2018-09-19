@@ -24,7 +24,6 @@ namespace BuchhaltungV4
         public double Tax { get; set; }
 
         #endregion
-        //test
 
         public Entry(int id, int weekId, int dayId, int productId, int amount, int amountOnTheHouse,double price)
         {
