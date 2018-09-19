@@ -13,7 +13,7 @@ using BuchhaltungV1.Windows;
 using MySql.Data.MySqlClient;
 using MessageBox = System.Windows.MessageBox;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
-using Rectangle = System.Windows.Shapes.Rectangle; //To assign the Rectangle to the correct Library (Two diffrent)
+using Rectangle = System.Windows.Shapes.Rectangle;
 
 /*
  * overall implementation of sql
@@ -594,7 +594,7 @@ namespace BuchhaltungV4
         /// <summary>
         /// Saves Backup
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">Path for the backup file</param>
         private void MakeBackUp(string path)
         {
             try
@@ -605,7 +605,7 @@ namespace BuchhaltungV4
                     File.Copy(newPath,newPath.Replace(source,path),true);
                 }
 
-                MessageBox.Show("Backup erstellt!");
+                Log("Backup erstellt!");
             }
             catch (Exception ex)
             {
@@ -617,7 +617,7 @@ namespace BuchhaltungV4
         /// <summary>
         /// Loads Backup
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">Path to load the backup file</param>
         private void LoadBackUp(string path)
         {
             try
@@ -638,16 +638,16 @@ namespace BuchhaltungV4
 
 
         /// <summary>
-        /// Saves the érror msg´s 
+        /// Saves the error msg´s 
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="e">Exception to save</param>
         public static void SaveErrorMsg(Exception e)
         {
             try
             {
                 using (StreamWriter errorWriter = new StreamWriter(@"ProgrammFiles\error.log", append: true))
                 {
-                    errorWriter.WriteLine("[ " + DateTime.Now + " ]" + e.Message + " | " + e.StackTrace + "\n");
+                    errorWriter.WriteLine("[ " + DateTime.Now + " ] " + e.Message + " | " + e.StackTrace + "\n");
                 }
             }
             catch (Exception x)
@@ -714,7 +714,7 @@ namespace BuchhaltungV4
                         if (line != null && line.Contains("["))
                             headLine = line.ToLower();
 
-                        switch (headLine) //sets the current day (if info sets the info and stops the programm)
+                        switch (headLine) //sets the current day (if info is found it gets split into the info values)
                         {
                             case "[monday]":
                                 CurrDay = DayOfTheWeek.Monday;
@@ -771,7 +771,7 @@ namespace BuchhaltungV4
         /// <summary>
         /// Split lines into better strings to use and adds them to the currDay
         /// </summary>
-        /// <param name="line"></param>
+        /// <param name="line">line</param>
         private void SplitAndAddLoadedEntry(string line)
         {
             if (line != null)
