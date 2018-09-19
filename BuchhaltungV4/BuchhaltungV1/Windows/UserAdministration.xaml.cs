@@ -123,7 +123,7 @@ namespace BuchhaltungV1.Windows
                 editUser.Closed += (x, y) =>
                 {
                     Buchhaltung.Log("refresh");
-                    FillTable();
+                    UserTable.Items.Refresh();
                 };
             }
         }
@@ -156,7 +156,6 @@ namespace BuchhaltungV1.Windows
         #endregion
 
         #region SQL
-
         /// <summary>
         /// Gets the usernames
         /// </summary>
@@ -230,7 +229,5 @@ namespace BuchhaltungV1.Windows
         protected static void CloseConnection() => _connection.Close();
 
         #endregion
-
-     
     }
 }
