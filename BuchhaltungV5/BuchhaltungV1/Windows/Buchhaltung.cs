@@ -8,12 +8,15 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using BuchhaltungV1.Enumerations;
 using BuchhaltungV1.Windows;
+using MySql.Data.MySqlClient;
 using MessageBox = System.Windows.MessageBox;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
-using Rectangle = System.Windows.Shapes.Rectangle; //To assign the Rectangle to the correct Library (Two diffrent)
+using Rectangle = System.Windows.Shapes.Rectangle;
 
 /*
+ * overall implementation of sql
  */
 namespace BuchhaltungV4
 {
@@ -31,8 +34,9 @@ namespace BuchhaltungV4
         public static List<DataBoxForGrid> Db = new List<DataBoxForGrid>(); //For editing to have references
         public static bool CloseWindow; //to close window
         public static bool IsAdmin; //to see if user is a admin
-        public const string ConnectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=Buchhaltung;SslMode=none"; //connection string for mysql
-        public static string Username;
+        public const string ConnectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=Buchhaltung;SslMode=none"; //connection string for mysql user
+        private static MySqlConnection _connection; //sql connection
+        public static string Username; //current username logged in
         #endregion
 
         #region Ctor´s
@@ -45,6 +49,7 @@ namespace BuchhaltungV4
         /// <param name="name"></param>
         /// <param name="exTime"></param>
         /// <param name="lastCashDesk"></param>
+        /// <param name="username"></param>
         /// <param name="isAdmin"></param>
         public Buchhaltung(string weekNr, string name, DateTime exTime, double lastCashDesk,string username, int isAdmin)
         {
@@ -55,7 +60,7 @@ namespace BuchhaltungV4
             LoadProducts();
             CurrWeek = new Week(weekNr, exTime, name, lastCashDesk); //Selects the current week
             GenerateDaysOfThWeekAndAddToWeek();
-            SaveEntrys();
+            SaveEntrys(); //When generated a new week the file need to be generated
             DayOutput.Text = "Montag";
             FillWeekInfo();
 
@@ -67,6 +72,7 @@ namespace BuchhaltungV4
         /// Constructor if week does exist
         /// </summary>
         /// <param name="weekNr"></param>
+        /// <param name="username"></param>
         /// <param name="isAdmin"></param>
         public Buchhaltung(string weekNr,string username, int isAdmin)
         {
@@ -178,8 +184,8 @@ namespace BuchhaltungV4
                 }
             }
 
-            double tenPer = (tenPriceAll / 100) * 10;
-            double twentPer = (twenPriceAll / 100) * 20;
+            double tenPer = Math.Round(((tenPriceAll / 110) * 10),2);
+            double twentPer = Math.Round(((twenPriceAll / 120) * 20),2);
 
             DailyIincomeOutput.Text =
                 "Heutige Einnahmen: " + Convert.ToString(priceAll, CultureInfo.InvariantCulture) +
@@ -257,19 +263,33 @@ namespace BuchhaltungV4
         {
             NewProduct np = new NewProduct();
             np.Show();
-            np.Closed += (a, b) => { LoadProducts(); };
         }
 
         /// <summary>
         /// opens the window to show all products
         /// </summary>
-        private void ListAllProducts()
+        private void ShowAllProducts()
         {
             OutputOfProducts o = new OutputOfProducts();
+            LoadProducts();
             o.Show();
-            o.Closed += (a, b) => { SaveProducts(); };
-        }
 
+            o.Closed += (x, y) =>
+            {
+                foreach (Day day in CurrWeek.DaysInWeek)
+                {
+                    if (day.Name.Equals(CurrDay))
+                    {
+                        day.Entrys.Clear();
+                        break;
+                    }
+                }
+                LoadProducts();
+                LoadWeek(CurrWeek.WeekNr);
+                ReCalcAndUpdateInfoLine();
+            };
+        }
+        
         /// <summary>
         /// Opens the window to add new entrys
         /// </summary>
@@ -409,8 +429,7 @@ namespace BuchhaltungV4
         /// </summary>
         private void CloseProgramm_CLICK(object sender, RoutedEventArgs e)
         {
-            SaveProducts();
-            SaveEntrys();
+            SaveEntrys();//todo delete if implemented with sql
             Environment.Exit(0);
         }
 
@@ -422,7 +441,7 @@ namespace BuchhaltungV4
         /// <summary>
         /// Calls function to List all Products
         /// </summary>
-        private void ListAllProducts_Click(object sender, MouseButtonEventArgs e) => ListAllProducts();
+        private void ListAllProducts_Click(object sender, MouseButtonEventArgs e) => ShowAllProducts();
 
         /// <summary>
         /// Calls function to add a new Product
@@ -575,7 +594,7 @@ namespace BuchhaltungV4
         /// <summary>
         /// Saves Backup
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">Path for the backup file</param>
         private void MakeBackUp(string path)
         {
             try
@@ -586,7 +605,7 @@ namespace BuchhaltungV4
                     File.Copy(newPath,newPath.Replace(source,path),true);
                 }
 
-                MessageBox.Show("Backup erstellt!");
+                Log("Backup erstellt!");
             }
             catch (Exception ex)
             {
@@ -598,7 +617,7 @@ namespace BuchhaltungV4
         /// <summary>
         /// Loads Backup
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">Path to load the backup file</param>
         private void LoadBackUp(string path)
         {
             try
@@ -617,32 +636,18 @@ namespace BuchhaltungV4
             }
         }
 
-        /// <summary>
-        /// Saves all Product
-        /// </summary>
-        public static void SaveProducts()
-        {
-            using (StreamWriter writer = new StreamWriter(@"Data\products.p", append: false))
-            {
-                foreach (Product t in Products)
-                {
-                    writer.Write(t.Id + ";" + t.Name + ";" + t.Price + ";" + t.Tax + ";" + t.Amount + ";" +
-                                 t.KindOfAmount + ";" + t.Group + "\n");
-                }
-            }
-        }
 
         /// <summary>
-        /// Saves the érror msg´s 
+        /// Saves the error msg´s 
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="e">Exception to save</param>
         public static void SaveErrorMsg(Exception e)
         {
             try
             {
                 using (StreamWriter errorWriter = new StreamWriter(@"ProgrammFiles\error.log", append: true))
                 {
-                    errorWriter.WriteLine("[ " + DateTime.Now + " ]" + e.Message + " | " + e.StackTrace + "\n");
+                    errorWriter.WriteLine("[ " + DateTime.Now + " ] " + e.Message + " | " + e.StackTrace + "\n");
                 }
             }
             catch (Exception x)
@@ -709,7 +714,7 @@ namespace BuchhaltungV4
                         if (line != null && line.Contains("["))
                             headLine = line.ToLower();
 
-                        switch (headLine) //sets the current day (if info sets the info and stops the programm)
+                        switch (headLine) //sets the current day (if info is found it gets split into the info values)
                         {
                             case "[monday]":
                                 CurrDay = DayOfTheWeek.Monday;
@@ -744,9 +749,9 @@ namespace BuchhaltungV4
 
                                 break;
                         }
+                        //calls a functione to splitup a line and add it to the correct day
+                        SplitAndAddLoadedEntry(line); 
 
-                        SplitAndAddLoadedEntry(
-                            line); //calls a functione to splitup a line and add it to the correct day
                         line = reader.ReadLine();
                     }
                 }
@@ -766,7 +771,7 @@ namespace BuchhaltungV4
         /// <summary>
         /// Split lines into better strings to use and adds them to the currDay
         /// </summary>
-        /// <param name="line"></param>
+        /// <param name="line">line</param>
         private void SplitAndAddLoadedEntry(string line)
         {
             if (line != null)
@@ -786,46 +791,6 @@ namespace BuchhaltungV4
             }
         }
 
-        /// <summary>
-        /// loads products into programm
-        /// </summary>
-        private void LoadProducts()
-        {
-            string allProducts = "";
-            try
-            {
-                using (StreamReader reader = new StreamReader(@"Data\products.p")) //loads the whole document in
-                {
-                    allProducts = reader.ReadToEnd();
-                }
-            }
-            catch (Exception e)
-            {
-                Log(e.Message);
-                SaveErrorMsg(e);
-            }
-
-            string[] firstSplit = allProducts.Split('\n');
-
-            try //splits them up and adds them
-            {
-                Products.Clear();
-                for (int i = 0; i < firstSplit.Length - 1; i++)
-                {
-                    string[] secondSplit = firstSplit[i].Split(';');
-                    Product p = new Product(secondSplit[1], Convert.ToDouble(secondSplit[2]),
-                        Convert.ToInt32(secondSplit[3]), Convert.ToDouble(secondSplit[4]), secondSplit[5],
-                        Convert.ToInt32(secondSplit[0]) - 1, secondSplit[6]);
-                    Products.Add(p);
-                }
-            }
-            catch (Exception e)
-            {
-                Log(e.Message);
-                SaveErrorMsg(e);
-            }
-        }
-
         #endregion
 
         #region Output
@@ -834,9 +799,12 @@ namespace BuchhaltungV4
         /// a Log function
         /// </summary>
         /// <param name="msg"></param>
-        public static void Log(string msg)
+        /// <param name="caption"></param>
+        /// <param name="msgInfo"></param>
+        /// <param name="msgBtn"></param>
+        public static void Log(string msg, string caption = "Info", MessageBoxImage msgInfo = MessageBoxImage.Information, MessageBoxButton msgBtn = MessageBoxButton.OK)
         {
-            MessageBox.Show("[ " + DateTime.Now + " ] " + msg);
+            MessageBox.Show("[ " + DateTime.Now + " ] " + msg, caption, msgBtn, msgInfo);
         }
 
         /// <summary>
@@ -851,10 +819,60 @@ namespace BuchhaltungV4
             return result == MessageBoxResult.Yes;
         }
 
-        #endregion
+    #endregion
 
-        #region SQL //todo
-        //todo
+        #region SQL 
+
+        /// <summary>
+        /// loads products into programm
+        /// </summary>
+        private void LoadProducts()
+        {
+            Products = new List<Product>();
+            try
+            {
+                string query = "SELECT * FROM product";
+                CreateConnection();
+
+                MySqlCommand commandDatabase = new MySqlCommand(query, _connection) {CommandTimeout = 60};
+                _connection.Open();
+
+                MySqlDataReader reader = commandDatabase.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        string id = reader.GetString(0);
+                        string name = reader.GetString(1);
+                        string price = reader.GetString(2);
+                        string tax = reader.GetString(3);
+                        string amount = reader.GetString(4);
+                        string kindOfAmount = reader.GetString(5);
+                        string group = reader.GetString(6);
+                        Products.Add(new Product(name, Convert.ToDouble(price), Convert.ToInt32(tax),
+                            Convert.ToDouble(amount), kindOfAmount, Convert.ToInt32(id), group));
+                    }
+                }
+
+                CloseConnection();
+            }
+            catch (Exception ex)
+            {
+                SaveErrorMsg(ex);
+                Log(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Creates a new Connection
+        /// </summary>
+        protected static void CreateConnection() => _connection = new MySqlConnection(ConnectionString);
+
+        /// <summary>
+        /// Closes the connection
+        /// </summary>
+        protected static void CloseConnection() => _connection.Close();
         #endregion
 
         #region Animations
@@ -982,9 +1000,6 @@ namespace BuchhaltungV4
 
             return animation;
         }
-
-
-
         #endregion
     }
 }

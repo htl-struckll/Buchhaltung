@@ -1,0 +1,28 @@
+﻿<Window x:Class="BuchhaltungV1.Windows.NewUser"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BuchhaltungV1.Windows"
+        mc:Ignorable="d"
+        ResizeMode="NoResize"
+        Title="Neuer Benutzer" Height="317.422" Width="314.306">
+    <Grid>
+        <TextBlock Margin="10,10,210,231" FontSize="18">Id:</TextBlock>
+        <TextBlock x:Name="IdOutput" Margin="122,5,98,236" FontSize="18"></TextBlock>
+
+        <TextBlock Margin="10,57,210,184" FontSize="18">Name:</TextBlock>
+        <TextBox x:Name="NameInput" FontSize="15" Margin="122,57,23,199"></TextBox>
+
+        <TextBlock Margin="10,109,210,132" FontSize="18">Password:</TextBlock>
+        <PasswordBox x:Name="PasswordInput" FontSize="16" Margin="122,109,23,147"></PasswordBox>
+
+        <TextBlock Margin="10,159,210,82" FontSize="18">Retype:</TextBlock>
+        <PasswordBox x:Name="PasswordRetypeInput" FontSize="16" Margin="122,159,23,97"></PasswordBox>
+
+        <TextBlock Margin="10,214,210,27" FontSize="18">Admin:</TextBlock>
+        <CheckBox x:Name="IsAdminCheckBox" Margin="122,224,132,27" FontSize="18"></CheckBox>
+
+        <Button Margin="238,241,10,10" FontSize="15" Click="Ok_Click">Ok</Button>
+    </Grid>
+</Window>

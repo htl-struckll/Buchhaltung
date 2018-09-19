@@ -1,0 +1,32 @@
+﻿<Window x:Class="BuchhaltungV4.NewEntry"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Neuer Eintrag" Height="300" Width="300">
+    <Grid>
+        <TextBlock Margin="10,22,209.6,211.4" FontSize="16">L-Code:</TextBlock>
+        <TextBox x:Name="InputId" Margin="100,28,125.6,211.4" KeyUp="OnTextInput_ID" />
+
+        <TextBlock x:Name="ProductOutput" Margin="10,75,9.6,149.4" FontSize="16" Text="Produkt:" />
+
+        <TextBlock Margin="10,121,209.6,112.4" FontSize="16">
+            <Run Text="Anzahl:" />
+        </TextBlock>
+        <TextBox x:Name="InputAmount" Margin="100,126,125.6,113.4" KeyUp="InputAmount_keyDown" KeyDown="CheckEnter_KeyDown" />
+
+        <TextBlock Margin="10,163,193.6,70.4" FontSize="16">
+            <Run Text="Aufs Haus:" />
+        </TextBlock>
+        <TextBox x:Name="InputAmountOnTheHouse" Margin="100,169,125.6,70.4" KeyUp="InputOnTheHouse_keyDown" KeyDown="CheckEnter_KeyDown" />
+
+        <TextBlock x:Name="PriceOutput" Margin="10,205,9.6,28.4" FontSize="16">
+            <Run Text="Preis:" />
+        </TextBlock>
+
+        <Button Click="Ok_Click" Margin="105,238,109.6,4.4">OK</Button>
+        <Button Margin="208,238,9.6,4.4" Click="Cancel_Click">Abbruch</Button>
+
+    </Grid>
+</Window>
